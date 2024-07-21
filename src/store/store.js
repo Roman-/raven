@@ -15,6 +15,7 @@ export const store = createStore({
     mutations: {
         increment (state, n) {
             state.count += n
+            console.log("Incremented state count, now it's " + state.count);
         }
     }
 })
