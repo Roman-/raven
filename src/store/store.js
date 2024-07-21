@@ -4,18 +4,14 @@ import { createStore } from 'vuex'
 export const store = createStore({
     state () {
         return {
-            count: 0
+            coins: 9,
         }
     },
     getters: {
-        doubleCount (state) {
-            return state.count * 2
-        }
     },
     mutations: {
-        increment (state, n) {
-            state.count += n
-            console.log("Incremented state count, now it's " + state.count);
+        decrementCoins (state) {
+            state.coins--
         }
     }
 })

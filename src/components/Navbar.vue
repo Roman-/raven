@@ -1,5 +1,7 @@
 <script setup>
 
+import { store } from "@/store/store";
+
 </script>
 
 <template>
@@ -13,7 +15,7 @@
           <div class="flex items-center">
             <div class="w-3 h-3 rounded-full bg-amber-400"></div>
             <span class="px-1">
-              1
+              {{store.state.coins}}
             </span>
           </div>
         </div>
@@ -23,7 +25,7 @@
           <div class="card-body">
             <div>
               <span class="text-md inline">Balance:</span>
-              <span class="text-md inline font-bold mx-2">1 brick</span>
+              <span class="text-md inline font-bold mx-2">{{store.state.coins}} coin(s)</span>
             </div>
             <div class="card-actions">
               <button class="btn btn-primary btn-block">Top up</button>
