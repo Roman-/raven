@@ -16,7 +16,7 @@ const props = defineProps({
       :src="props.pic"
       alt="img">
   <div v-else class="flex w-full justify-center items-center">
-    <div class="text-2xl p-2" @click="store.mutations.increment(1)">
+    <div class="text-2xl p-2" @click="store.commit('increment', 10)">
       +
     </div>
   </div>

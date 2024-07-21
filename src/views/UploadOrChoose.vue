@@ -1,7 +1,8 @@
 <script setup>
 
 import PreUploadedPic from "@/components/upload_or_choose/PreUploadedPic.vue";
-import {store} from "../store/store";
+import {store} from "@/store/store";
+
 </script>
 
 <template>
