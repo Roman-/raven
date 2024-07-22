@@ -5,6 +5,8 @@ export const store = createStore({
     state () {
         return {
             coins: 9,
+            preloadedImageUuids: [ '', '1', '2', '3' ], // first is fake "upload img"
+            originalImage: null, // uncropped; new Image()
         }
     },
     getters: {
@@ -13,6 +15,9 @@ export const store = createStore({
         }
     },
     mutations: {
+        choosePicture(state, pic) {
+
+        },
         setCoins (state, amount) {
             state.coins = amount
         },
@@ -21,10 +26,5 @@ export const store = createStore({
         }
     },
     actions: {
-        updateFromDb (context) {
-            setTimeout(() => {
-                context.commit('setCoins', 99)
-            }, 1000)
-        }
     }
 })

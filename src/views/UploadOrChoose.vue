@@ -10,10 +10,7 @@ import {store} from "@/store/store";
     Select an image:
   </h1>
 <div class="flex justify-around">
-  <PreUploadedPic pic=""/>
-  <PreUploadedPic pic="img/pre_uploaded_src/Mona%20Lisa.jpg"/>
-  <PreUploadedPic pic="img/pre_uploaded_src/Marilyn%20Monroe.jpg"/>
-  <PreUploadedPic pic="img/pre_uploaded_src/Van%20Gogh.jpg"/>
+  <PreUploadedPic v-for="uuid in store.state.preloadedImageUuids" :uuid="uuid"/>
 </div>
   <div class="p-3">
     <h1 class="text-2xl font-semibold">

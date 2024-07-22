@@ -5,15 +5,16 @@ import {useRouter} from "vue-router";
 const router = useRouter();
 
 const props = defineProps({
-  pic: String
+  uuid: String
 })
-const isUploadBtn = computed(() => props.pic === '');
+const isUploadBtn = computed(() => props.uuid === '');
 const onClicked = () => {
   console.log("isUploadBtn ? ", isUploadBtn.value);
   if (isUploadBtn.value) {
     store.commit('decrementCoins')
+    // upload new image
   } else {
-    // TODO push current picture to store
+    // load existing one by image-uuid
     router.push('crop')
   }
 }
@@ -30,7 +31,7 @@ const onClicked = () => {
   </div>
   <img v-else
        class="w-full object-cover cursor-pointer hover:opacity-80"
-       :src="props.pic"
+       :src="`img/user_uploads/${props.uuid}.jpg`"
        alt="img">
 </div>
 
