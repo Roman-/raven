@@ -7,6 +7,9 @@ export const store = createStore({
             coins: 9,
             preloadedImageUuids: [ '', '1', '2', '3' ], // first one is fake "upload img"
             originalImage: null, // new Image()
+            croppedImageSrc: null,
+            pixelWidth: 0,
+            pixelHeight: 0,
         }
     },
     getters: {
@@ -20,6 +23,11 @@ export const store = createStore({
             state.originalImage.crossOrigin = "Anonymous";
             state.originalImage.addEventListener('load', onImageReady);
             state.originalImage.src = src
+        },
+        setCroppedImg(state, dataUrl, width, height) {
+            state.croppedImageSrc = dataUrl
+            state.pixelWidth = width
+            state.pixelHeight = height
         },
         setCoins (state, amount) {
             state.coins = amount

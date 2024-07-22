@@ -13,13 +13,15 @@ onMounted(() => {
   }
 })
 
-const onCropFinished = () => {
-  // TODO save cropped to store; check coins etc.
-  router.push('method')
-}
-
 const width = ref(20)
 const height = ref(30)
+
+const onCropFinished = () => {
+  store.commit('setCroppedImg',
+      cropper.getCroppedCanvas({fillColor: '#fff'}).toDataURL(),
+      width.value, height.value)
+  router.push('method')
+}
 
 </script>
 
