@@ -5,8 +5,8 @@ export const store = createStore({
     state () {
         return {
             coins: 9,
-            preloadedImageUuids: [ '', '1', '2', '3' ], // first is fake "upload img"
-            originalImage: null, // uncropped; new Image()
+            preloadedImageUuids: [ '', '1', '2', '3' ], // first one is fake "upload img"
+            originalImage: null, // new Image()
         }
     },
     getters: {

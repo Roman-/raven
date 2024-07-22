@@ -14,10 +14,9 @@ const onClicked = () => {
   console.log("isUploadBtn ? ", isUploadBtn.value);
   if (isUploadBtn.value) {
     store.commit('decrementCoins')
-    // load from file, init crop with it
+    // TODO load from file, init crop with it
   } else {
     router.push('crop')
-    // load existing one by image-uuid
     store.commit('setImgSrc', imgSrc.value, ()=>{router.push('crop')})
   }
 }
