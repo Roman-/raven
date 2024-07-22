@@ -1,13 +1,16 @@
 <script setup>
 
 import { store } from "@/store/store";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 </script>
 
 <template>
   <div class="navbar bg-base-100">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl">PixelTools</a>
+      <a class="btn btn-ghost text-xl" @click="router.push('/')">PixelTools</a>
     </div>
     <div class="flex-none">
       <div class="dropdown dropdown-end">

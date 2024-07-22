@@ -3,7 +3,9 @@
 </script>
 
 <template>
-crop with cropjs lib
+  <div>
+    crop with cropjs lib
+  </div>
 </template>
 
 <style scoped>
