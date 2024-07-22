@@ -15,8 +15,11 @@ export const store = createStore({
         }
     },
     mutations: {
-        choosePicture(state, pic) {
-
+        setImgSrc (state, src, onImageReady) {
+            state.originalImage = new Image()
+            state.originalImage.crossOrigin = "Anonymous";
+            state.originalImage.addEventListener('load', onImageReady);
+            state.originalImage.src = src
         },
         setCoins (state, amount) {
             state.coins = amount

@@ -7,15 +7,18 @@ const router = useRouter();
 const props = defineProps({
   uuid: String
 })
+const imgSrc = computed(() => `/img/user_uploads/${props.uuid}.jpg`)
+
 const isUploadBtn = computed(() => props.uuid === '');
 const onClicked = () => {
   console.log("isUploadBtn ? ", isUploadBtn.value);
   if (isUploadBtn.value) {
     store.commit('decrementCoins')
-    // upload new image
+    // load from file, init crop with it
   } else {
-    // load existing one by image-uuid
     router.push('crop')
+    // load existing one by image-uuid
+    store.commit('setImgSrc', imgSrc.value, ()=>{router.push('crop')})
   }
 }
 </script>
@@ -31,7 +34,7 @@ const onClicked = () => {
   </div>
   <img v-else
        class="w-full object-cover cursor-pointer hover:opacity-80"
-       :src="`img/user_uploads/${props.uuid}.jpg`"
+       :src="imgSrc"
        alt="img">
 </div>
 
