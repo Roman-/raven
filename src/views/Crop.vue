@@ -8,7 +8,9 @@ import 'cropperjs/dist/cropper.css';
 let cropper = null
 
 onMounted(() => {
-  if (store.state.originalImage === null) { router.push('/') }
+  if (store.state.originalImage === null) {
+    router.push('/')
+  }
 })
 
 const onCropFinished = () => {
@@ -16,25 +18,50 @@ const onCropFinished = () => {
   router.push('method')
 }
 
+const width = ref(20)
+const height = ref(30)
+
 </script>
 
 <template>
-  <div class="flex justify-between items-center">
-    <button class="btn" @click="router.push('/')">
-      Back
-    </button>
-    <div>
-      Crop image
-    </div>
-    <button class="btn mx-2" @click="onCropFinished">
-      Next
-    </button>
-  </div>
   <div class="flex">
+    <div class="w-72">
+      <div class="text-center">
+        How many cubes?
+      </div>
+      <div class="flex items-center">
+        <input
+            type="number"
+            placeholder="width"
+            class="input input-bordered w-full max-w-xs m-1"
+            v-model="width"
+        />
+        <span>x</span>
+        <input
+            type="number"
+            placeholder="width"
+            class="input input-bordered w-full max-w-xs m-1"
+            v-model="height"
+        />
+      </div>
+
+      <div class="flex mx-2">
+        <button
+            class="btn btn-success w-full"
+            @click="onCropFinished"
+        >
+          Next
+        </button>
+      </div>
+
+    </div>
+    <div class="bg-amber-800 w-full h-80vh">cropper</div>
+<!--
     <VueCropper
         class="w-full h-80vh"
         ref="cropper"
         :src="store.state.originalImage?.src ?? ''"/>
+-->
   </div>
 </template>
 
