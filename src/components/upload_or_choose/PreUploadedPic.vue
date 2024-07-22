@@ -18,13 +18,13 @@ const onClicked = () => {
 <div
     @click="onClicked"
     class="bg-gray-400 cursor-pointer h-32 w-64 rounded-2xl overflow-hidden m-2 flex">
-  <div v-if="isUploadBtn" class="flex w-full justify-center items-center">
-    <div class="text-2xl p-2">
+  <div v-if="isUploadBtn" class="flex w-full justify-center items-center text-2xl hover:text-3xl">
+    <div class="p-2">
       +
     </div>
   </div>
   <img v-else
-       class="w-full object-cover cursor-pointer"
+       class="w-full object-cover cursor-pointer hover:opacity-80"
        :src="props.pic"
        alt="img">
 </div>
