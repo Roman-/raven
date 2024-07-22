@@ -27,11 +27,12 @@ const height = ref(30)
   <div class="flex">
     <div class="w-72">
       <div class="text-center">
-        How many cubes?
+        Size:
       </div>
       <div class="flex items-center">
         <input
             type="number"
+            min="1"
             placeholder="width"
             class="input input-bordered w-full max-w-xs m-1"
             v-model="width"
@@ -39,17 +40,18 @@ const height = ref(30)
         <span>x</span>
         <input
             type="number"
+            min="1"
             placeholder="width"
             class="input input-bordered w-full max-w-xs m-1"
             v-model="height"
         />
       </div>
 
+      <div class="divider">
+        {{width * height}} px
+      </div>
       <div class="flex mx-2">
-        <button
-            class="btn btn-success w-full"
-            @click="onCropFinished"
-        >
+        <button class="btn btn-success w-full" @click="onCropFinished">
           Next
         </button>
       </div>

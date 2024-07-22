@@ -11,7 +11,6 @@ const imgSrc = computed(() => `/img/user_uploads/${props.uuid}.jpg`)
 
 const isUploadBtn = computed(() => props.uuid === '');
 const onClicked = () => {
-  console.log("isUploadBtn ? ", isUploadBtn.value);
   if (isUploadBtn.value) {
     store.commit('decrementCoins')
     // TODO load from file, init crop with it
