@@ -57,13 +57,11 @@ const height = ref(30)
       </div>
 
     </div>
-    <div class="bg-amber-800 w-full h-80vh">cropper</div>
-<!--
+<!--    <div class="bg-amber-800 w-full h-80vh">cropper</div>-->
     <VueCropper
         class="w-full h-80vh"
         ref="cropper"
         :src="store.state.originalImage?.src ?? ''"/>
--->
   </div>
 </template>
 
