@@ -23,19 +23,16 @@ onMounted(() => {
   <div>
     Crop image:
   </div>
-  <div class="flex h-full">
-    <img
-        class="w-full"
-        :src="store.state.originalImage?.src ?? ''"/>
-
-    <!--
+  <div class="flex">
         <vue-cropper
-            class="w-full"
+            class="w-full h-80vh"
             ref="cropper"
             :src="store.state.originalImage?.src ?? ''"/>
-    -->
   </div>
 </template>
 
 <style scoped>
+.h-80vh {
+  height: 80vh;
+}
 </style>
