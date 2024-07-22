@@ -1,6 +1,8 @@
 <script setup>
 import {computed, defineProps} from 'vue';
 import {store} from "@/store/store";
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 const props = defineProps({
   pic: String
@@ -10,6 +12,9 @@ const onClicked = () => {
   console.log("isUploadBtn ? ", isUploadBtn.value);
   if (isUploadBtn.value) {
     store.commit('decrementCoins')
+  } else {
+    // TODO push current picture to store
+    router.push('crop')
   }
 }
 </script>

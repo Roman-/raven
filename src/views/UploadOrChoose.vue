@@ -17,7 +17,7 @@ import {store} from "@/store/store";
 </div>
   <div class="p-3">
     <h1 class="text-2xl font-semibold">
-      Create mosaic!
+      Lorem ipsum
     </h1>
     <div>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid aspernatur atque aut autem beatae corporis culpa dolor dolore dolorum earum eius illum inventore ipsa iure laboriosam magnam magni minus nisi numquam optio, pariatur possimus quasi quisquam quos rem repellat saepe, sapiente sed soluta tempora tempore tenetur voluptate voluptatibus, voluptatum!

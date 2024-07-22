@@ -14,8 +14,18 @@ export const store = createStore({
         }
     },
     mutations: {
+        setCoins (state, amount) {
+            state.coins = amount
+        },
         decrementCoins (state) {
             state.coins--
+        }
+    },
+    actions: {
+        updateFromDb (context) {
+            setTimeout(() => {
+                context.commit('setCoins', 99)
+            }, 1000)
         }
     }
 })

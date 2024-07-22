@@ -29,6 +29,7 @@ import { store } from "@/store/store";
             </div>
             <div class="card-actions">
               <button class="btn btn-primary btn-block">Top up</button>
+              <button class="btn btn-primary btn-block" @click="store.dispatch('updateFromDb')">Update from db</button>
             </div>
           </div>
         </div>
