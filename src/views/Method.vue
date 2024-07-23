@@ -25,10 +25,11 @@ const onMethodSelected = () => {
       <div class="divider">
         continue?
       </div>
+      <div class="flex mx-2 my-1">
+        <button class="btn btn-full w-full " @click="router.push('crop')"> Back </button>
+      </div>
       <div class="flex mx-2">
-        <button class="btn btn-success w-full" @click="onMethodSelected">
-          Next
-        </button>
+        <button class="btn btn-success w-full" @click="onMethodSelected"> Next </button>
       </div>
 
     </div>
