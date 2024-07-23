@@ -7,7 +7,6 @@ onMounted(() => {
   if (store.state.croppedImageSrc === null) {
     router.push('/')
   }
-  console.log("store.state.croppedImageSrc", store.state.croppedImageSrc);
 })
 
 const onMethodSelected = () => {
