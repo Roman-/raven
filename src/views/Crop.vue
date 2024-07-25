@@ -43,8 +43,6 @@ watch(() => store.state.pixelSize, () => {
         :dragMode="'move'"
         :center="false"
         :autoCropArea ="0.999"
-
-    @cropend="onCropFinished"
         :src="store.state.originalImage?.src ?? ''"/>
   </div>
 </template>
