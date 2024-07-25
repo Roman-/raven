@@ -30,11 +30,21 @@ watch(() => store.state.pixelSize, () => {
   <div class="flex">
     <div class="w-72">
       <SizeWood/>
+      <div class="flex mx-2">
+        <button class="btn btn-success w-full" @click="onCropFinished">
+          Next
+        </button>
+      </div>
     </div>
 <!--    <div class="bg-amber-800 w-full h-80vh">cropper</div>-->
     <VueCropper
         class="w-full h-80vh"
         ref="cropper"
+        :dragMode="'move'"
+        :center="false"
+        :autoCropArea ="0.999"
+
+    @cropend="onCropFinished"
         :src="store.state.originalImage?.src ?? ''"/>
   </div>
 </template>

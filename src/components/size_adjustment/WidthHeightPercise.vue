@@ -30,11 +30,6 @@ const height = ref(30)
   <div class="divider">
     {{width * height}} px
   </div>
-  <div class="flex mx-2">
-    <button class="btn btn-success w-full" @click="onCropFinished">
-      Next
-    </button>
-  </div>
 </template>
 
 <style scoped>
