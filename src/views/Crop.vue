@@ -1,9 +1,10 @@
 <script setup>
 import {store} from "@/store/store";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import router from "@/router";
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+import SizeWood from "@/components/size_adjustment/SizeWood.vue";
 
 let cropper = null
 
@@ -13,51 +14,22 @@ onMounted(() => {
   }
 })
 
-const width = ref(20)
-const height = ref(30)
-
 const onCropFinished = () => {
   store.commit('setCroppedImg',
-      cropper.getCroppedCanvas({fillColor: '#fff'}).toDataURL(),
-      width.value, height.value)
+      cropper.getCroppedCanvas({fillColor: '#fff'}).toDataURL())
   router.push('method')
 }
+
+watch(() => store.state.pixelSize, () => {
+  cropper.setAspectRatio(store.state.pixelSize[0]/store.state.pixelSize[1])
+})
 
 </script>
 
 <template>
   <div class="flex">
     <div class="w-72">
-      <div class="text-center">
-        Size:
-      </div>
-      <div class="flex items-center">
-        <input
-            type="number"
-            min="1"
-            placeholder="width"
-            class="input input-bordered w-full max-w-xs m-1"
-            v-model="width"
-        />
-        <span>x</span>
-        <input
-            type="number"
-            min="1"
-            placeholder="width"
-            class="input input-bordered w-full max-w-xs m-1"
-            v-model="height"
-        />
-      </div>
-
-      <div class="divider">
-        {{width * height}} px
-      </div>
-      <div class="flex mx-2">
-        <button class="btn btn-success w-full" @click="onCropFinished">
-          Next
-        </button>
-      </div>
-
+      <SizeWood/>
     </div>
 <!--    <div class="bg-amber-800 w-full h-80vh">cropper</div>-->
     <VueCropper
