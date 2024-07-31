@@ -1,23 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import UploadOrChoose from "@/views/UploadOrChoose.vue";
-import Crop from "@/views/Crop.vue";
-import Method from "@/views/Method.vue";
+import Home from "@/views/Home.vue";
 
 const routes = [
   {
     path: '/',
-    name: 'upload_or_choose',
-    component: UploadOrChoose
-  },
-  {
-    path: '/crop',
-    name: 'crop',
-    component: Crop
-  },
-  {
-    path: '/method',
-    name: 'method',
-    component: Method
+    name: 'hove',
+    component: Home
   },
 ]
 
