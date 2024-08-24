@@ -10,7 +10,7 @@ const router = useRouter();
 <template>
   <div class="navbar bg-base-100">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl" @click="router.push('/')">VueTemplate</a>
+      <a class="btn btn-ghost text-xl" @click="router.push('/')">__VUE_TEMPLATE__</a>
     </div>
     <div class="flex-none">
       <div class="dropdown dropdown-end">
