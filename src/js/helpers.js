@@ -18,7 +18,7 @@ export const downloadPlainText = (text, fileName) => {
 }
 
 // shuffles array in place
-function shuffle(a) {
+export const shuffle = (a) => {
     let j, x, i;
     for (i = a.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
@@ -29,21 +29,8 @@ function shuffle(a) {
     return a;
 }
 
-// converts file size in bytes to human-readable string
-function humanFileSize(bytes, si = true) {
-    let thresh = si ? 1000 : 1024;
-    if(Math.abs(bytes) < thresh) {
-        return bytes + ' B';
-    }
-    let units = si
-        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-    let u = -1;
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-    return bytes.toFixed(1)+' '+units[u];
+export const randomElement = (array) => {
+    return array[Math.floor(Math.random() * array.length)];
 }
 
 // @returns current date in format DDMMYYYY
