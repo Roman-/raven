@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 
+// 'coins' is just for example
 export const store = createStore({
     strict: true,
     state () {

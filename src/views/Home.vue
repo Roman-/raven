@@ -11,7 +11,6 @@ import {store} from "@/store/store";
 <div class="flex justify-around">
   <div>with tailwind</div>
   <div>with daisyUI</div>
-  <div>with i18n?</div>
 </div>
   <div class="p-3">
     <h1 class="text-2xl font-semibold">

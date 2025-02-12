@@ -38,11 +38,3 @@ function getCurrentDateString() {
     let t = (new Date());
     return '' + t.getDate() + '-' + t.getMonth() + '-' + t.getFullYear();
 }
-
-// @returns name of the file from full path
-// @param path - path to file
-function filenameFromPath(path) {
-    let parts = path.split(/[\/\\\.]/);
-    // return a thing second to last
-    return (parts.length > 1) ? parts[parts.length - 2] : parts[0];
-}
