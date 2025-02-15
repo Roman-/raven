@@ -1,12 +1,12 @@
 // generates matrix like [[123][231][312]] where no rows nor cols have same number
 export const generate2dGrid = () => {
     const permutations = [
-        [1, 2, 3],
-        [1, 3, 2],
-        [2, 1, 3],
-        [2, 3, 1],
-        [3, 1, 2],
-        [3, 2, 1],
+        [1, 2, 0],
+        [1, 0, 2],
+        [2, 1, 0],
+        [2, 0, 1],
+        [0, 1, 2],
+        [0, 2, 1],
     ];
 
     const firstPick = permutations[Math.floor(Math.random() * permutations.length)];

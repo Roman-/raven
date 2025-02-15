@@ -2,16 +2,14 @@
 import {generate2dGrid} from "@/js/generators";
 import {ref} from "vue";
 
-const variants = ref([])
+const grid = [[2,1,0],[1,0,2],[0,2,1]];
 
-for (let i = 0; i < 10; i++) {
-  variants.value.push(JSON.stringify(generate2dGrid()))
+const propPicks = {
+  "fg": ["A", "B", "C"],
+  "bg": ["#CCF1FF", "#E0D7FF", "#FFCCE1"],
 }
-generate2dGrid
+
 </script>
 
 <template>
-  <div v-for="v in variants">
-    {{v}}
-  </div>
 </template>
