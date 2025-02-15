@@ -13,8 +13,7 @@ const router = useRouter();
       <a class="btn btn-ghost text-xl" @click="router.push('/')">__VUE_TEMPLATE__</a>
     </div>
     <div class="flex-none">
-      <!-- you may insert some buttons/components here-->
-      <ThemeController/>
+      <ThemeController />
     </div>
   </div>
 </template>
