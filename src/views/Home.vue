@@ -24,11 +24,17 @@ onMounted(() => {
   setTimeout(generate, 100);
 });
 
+
 </script>
 
 <template>
   <div class="flex flex-col align-items-center justify-content-center">
     <canvas ref="myCanvas" :width="canvasSize" :height="canvasSize"></canvas>
+    <div class="flex">
+      <button v-for="">
+
+      </button>
+    </div>
   </div>
 
 </template>

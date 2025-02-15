@@ -29,8 +29,12 @@ function drawSquare(ctx, row, col, cellSize, letter, color, isQuestion) {
 }
 
 function fillWithPleasantGradient(ctx, canvasSize) {
-    const gradient = ctx.createLinearGradient(0, 0, canvasSize, canvasSize);
-    const colors = shuffle([ "#CCF1FF", "#E0D7FF", "#FFCCE1"])
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+    const rnd = () => Math.random() > 0.5 ? 0 : canvasSize;
+    const gradient = ctx.createLinearGradient(rnd(), rnd(), rnd(), rnd());
+    const colors = shuffle([ "#DCF1FF", "#F0E7FF", "#FFDCE1"])
     gradient.addColorStop(0, colors[0]);
     gradient.addColorStop(0.5, colors[1]);
     gradient.addColorStop(1, colors[2]);
