@@ -4,10 +4,10 @@ function drawSquare(ctx, row, col, cellSize, letter, color) {
     const y = row * cellSize;
 
     // Draw the cell background
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, cellSize, cellSize);
     ctx.strokeStyle = "#000";
     ctx.strokeRect(x, y, cellSize, cellSize);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, cellSize, cellSize);
 
     // Draw the foreground text (letter)
     ctx.fillStyle = "#000";

@@ -12,7 +12,7 @@ const generate = () => {
   const grid = generate2dGrid()
   const propPicks = {
     "fg": generateThreeEmojis(true),
-    "bg": generateThreeColors(false),
+    "bg": generateThreeColors(true),
   };
 
   drawGrid(grid, propPicks, ctx, cellSize.value);
