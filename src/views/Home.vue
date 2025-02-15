@@ -29,5 +29,8 @@ onMounted(() => {
   <button class="btn btn-primary mt-5" @click="generate">
     Generate
   </button>
+<!--  cell size range-->
+  <input type="range" min="100" max="500" v-model="cellSize">
+
 </template>
 

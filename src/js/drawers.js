@@ -11,7 +11,7 @@ function drawSquare(ctx, row, col, cellSize, letter, color) {
 
     // Draw the foreground text (letter)
     ctx.fillStyle = "#000";
-    ctx.font = "120px Arial";
+    ctx.font = `${cellSize * 0.7}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(letter, x + cellSize / 2, y + cellSize / 2);
