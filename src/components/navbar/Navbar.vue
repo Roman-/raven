@@ -10,7 +10,7 @@ const router = useRouter();
 <template>
   <div class="navbar bg-base-100">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl" @click="router.push('/')">__VUE_TEMPLATE__</a>
+      <a class="btn btn-ghost text-xl" @click="router.push('/')">Raven</a>
     </div>
     <div class="flex-none">
       <ThemeController />

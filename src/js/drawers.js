@@ -42,7 +42,7 @@ function fillWithPleasantGradient(ctx, canvasSize) {
     ctx.fillRect(0, 0, canvasSize, canvasSize);
 }
 
-export function drawGrid(grid, propPicks, ctx, canvasSize) {
+export function drawGrid(grid, propPicks, ctx, canvasSize, withQuestionMark) {
     fillWithPleasantGradient(ctx, canvasSize);
     for (let row = 0; row < grid.length; row++) {
         for (let col = 0; col < grid[row].length; col++) {
@@ -52,7 +52,7 @@ export function drawGrid(grid, propPicks, ctx, canvasSize) {
             const color = propPicks.bg[index];
 
             const cellSize = canvasSize / 3;
-            const isQuestion = (row === 2 && col === 2);
+            const isQuestion = (withQuestionMark && row === 2 && col === 2);
             drawSquare(ctx, row, col, cellSize, letter, color, isQuestion);
         }
     }

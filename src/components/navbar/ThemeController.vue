@@ -5,7 +5,7 @@ import {onMounted, ref} from "vue";
 // https://daisyui.com/docs/themes/ and don't forget to add the themes to tailwind.config.js
 const lightTheme = "light";
 const darkTheme = "dark";
-const localStorageIsDarkKey = "__VUE_TEMPLATE__is_dark";
+const localStorageIsDarkKey = "Raven_is_dark";
 const isDark = ref(localStorage.getItem(localStorageIsDarkKey) === "true");
 
 const applyTheme = () => {

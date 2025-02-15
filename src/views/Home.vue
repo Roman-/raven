@@ -6,16 +6,27 @@ import {drawGrid} from "@/js/drawers";
 const canvasSize = ref(600); // The pixel size of each cell in the grid
 const myCanvas = ref(null);
 
+const possibleAnswers = ref([]);
+const propPicks = ref(null)
+const correctAnswer = ref(null);
+const grid = ref(null)
+
+const reDraw = (withQuestionMark) => {
+  const ctx = myCanvas.value.getContext('2d');
+  drawGrid(grid.value, propPicks.value, ctx, canvasSize.value, withQuestionMark);
+}
+
 const generate = () => {
-  const canvas = myCanvas.value;
-  const ctx = canvas.getContext('2d');
-  const grid = generate2dGrid()
-  const propPicks = {
+  grid.value = generate2dGrid()
+  propPicks.value = {
     "fg": generateThreeEmojis(true),
     "bg": generateThreeColors(true),
   };
+  possibleAnswers.value = propPicks.value.fg
+  const indexOfAnswer = grid.value[2][2];
+  correctAnswer.value = propPicks.value.fg[indexOfAnswer];
 
-  drawGrid(grid, propPicks, ctx, canvasSize.value);
+  reDraw(true)
 }
 
 onMounted(() => {
@@ -24,15 +35,21 @@ onMounted(() => {
   setTimeout(generate, 100);
 });
 
+const onAnswerClick = (answer) => {
+  console.log(answer, correctAnswer.value);
+  reDraw(false)
+};
 
 </script>
 
 <template>
   <div class="flex flex-col align-items-center justify-content-center">
     <canvas ref="myCanvas" :width="canvasSize" :height="canvasSize"></canvas>
-    <div class="flex">
-      <button v-for="">
-
+    <div class="flex justify-around mt-4">
+      <button v-for="a in possibleAnswers"
+              class="text-5xl btn btn-outline btn-neutral btn-lg"
+              @click="onAnswerClick(a)">
+        {{a}}
       </button>
     </div>
   </div>
