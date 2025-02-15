@@ -1,13 +1,24 @@
 // Helper function to draw one square
-function drawSquare(ctx, row, col, cellSize, letter, color) {
+import {shuffle} from "@/js/helpers";
+
+function drawSquare(ctx, row, col, cellSize, letter, color, isQuestion) {
     const x = col * cellSize;
     const y = row * cellSize;
 
     // Draw the cell background
     ctx.strokeStyle = "#000";
     ctx.strokeRect(x, y, cellSize, cellSize);
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, cellSize, cellSize);
+    if (isQuestion) {
+        ctx.fillStyle = "#000";
+        ctx.font = `${cellSize * 0.7}px Arial`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("?", x + cellSize / 2, y + cellSize / 2);
+        return;
+    }
+
+    // ctx.fillStyle = color;
+    // ctx.fillRect(x, y, cellSize, cellSize);
 
     // Draw the foreground text (letter)
     ctx.fillStyle = "#000";
@@ -17,7 +28,18 @@ function drawSquare(ctx, row, col, cellSize, letter, color) {
     ctx.fillText(letter, x + cellSize / 2, y + cellSize / 2);
 }
 
-export function drawGrid(grid, propPicks, ctx, cellSize) {
+function fillWithPleasantGradient(ctx, canvasSize) {
+    const gradient = ctx.createLinearGradient(0, 0, canvasSize, canvasSize);
+    const colors = shuffle([ "#CCF1FF", "#E0D7FF", "#FFCCE1"])
+    gradient.addColorStop(0, colors[0]);
+    gradient.addColorStop(0.5, colors[1]);
+    gradient.addColorStop(1, colors[2]);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
+}
+
+export function drawGrid(grid, propPicks, ctx, canvasSize) {
+    fillWithPleasantGradient(ctx, canvasSize);
     for (let row = 0; row < grid.length; row++) {
         for (let col = 0; col < grid[row].length; col++) {
             // The value at grid[row][col] is the index in propPicks arrays
@@ -25,7 +47,9 @@ export function drawGrid(grid, propPicks, ctx, cellSize) {
             const letter = propPicks.fg[index];
             const color = propPicks.bg[index];
 
-            drawSquare(ctx, row, col, cellSize, letter, color);
+            const cellSize = canvasSize / 3;
+            const isQuestion = (row === 2 && col === 2);
+            drawSquare(ctx, row, col, cellSize, letter, color, isQuestion);
         }
     }
 }

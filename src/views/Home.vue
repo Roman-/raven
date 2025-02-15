@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import {generate2dGrid, generateThreeColors, generateThreeEmojis} from "@/js/generators";
 import {drawGrid} from "@/js/drawers";
 
-const cellSize = ref(200); // The pixel size of each cell in the grid
+const canvasSize = ref(600); // The pixel size of each cell in the grid
 const myCanvas = ref(null);
 
 const generate = () => {
@@ -15,22 +15,21 @@ const generate = () => {
     "bg": generateThreeColors(true),
   };
 
-  drawGrid(grid, propPicks, ctx, cellSize.value);
+  drawGrid(grid, propPicks, ctx, canvasSize.value);
 }
 
 onMounted(() => {
-  generate()
+  // minimum of (screen width, screen height) * 0.9
+  canvasSize.value = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.95);
+  setTimeout(generate, 100);
 });
 
 </script>
 
 <template>
-  <canvas ref="myCanvas" :width="cellSize * 3" :height="cellSize * 3"></canvas>
-  <button class="btn btn-primary mt-5" @click="generate">
-    Generate
-  </button>
-<!--  cell size range-->
-  <input type="range" min="100" max="500" v-model="cellSize">
+  <div class="flex flex-col align-items-center justify-content-center">
+    <canvas ref="myCanvas" :width="canvasSize" :height="canvasSize"></canvas>
+  </div>
 
 </template>
 
