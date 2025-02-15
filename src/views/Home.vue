@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import {generate2dGrid} from "@/js/generators";
+import {generate2dGrid, generateThreeColors, generateThreeEmojis} from "@/js/generators";
 
 const cellSize = ref(100); // The pixel size of each cell in the grid
 const myCanvas = ref(null);
@@ -16,7 +16,7 @@ function drawSquare(ctx, row, col, cellSize, letter, color) {
 
   // Draw the foreground text (letter)
   ctx.fillStyle = "#000";
-  ctx.font = "20px Arial";
+  ctx.font = "60px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(letter, x + cellSize / 2, y + cellSize / 2);
@@ -40,8 +40,8 @@ const generate = () => {
   const ctx = canvas.getContext('2d');
   const grid = generate2dGrid()
   const propPicks = {
-    "fg": ["A", "B", "C"],
-    "bg": ["#CCF1FF", "#E0D7FF", "#FFCCE1"],
+    "fg": generateThreeEmojis(true),
+    "bg": generateThreeColors(true),
   };
 
   drawGrid(grid, propPicks, ctx);
