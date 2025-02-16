@@ -1,7 +1,7 @@
 // Helper function to draw one square
 import {shuffle} from "@/js/helpers";
 
-function drawSquare(ctx, row, col, cellSize, letter, color, isQuestion) {
+function drawSquare(ctx, row, col, cellSize, letter, isQuestion) {
     const x = col * cellSize;
     const y = row * cellSize;
 
@@ -16,9 +16,6 @@ function drawSquare(ctx, row, col, cellSize, letter, color, isQuestion) {
         ctx.fillText("?", x + cellSize / 2, y + cellSize / 2);
         return;
     }
-
-    // ctx.fillStyle = color;
-    // ctx.fillRect(x, y, cellSize, cellSize);
 
     // Draw the foreground text (letter)
     ctx.fillStyle = "#000";
@@ -49,11 +46,10 @@ export function drawGrid(grid, propPicks, ctx, canvasSize, withQuestionMark) {
             // The value at grid[row][col] is the index in propPicks arrays
             const index = grid[row][col];
             const letter = propPicks.fg[index];
-            const color = propPicks.bg[index];
 
             const cellSize = canvasSize / 3;
             const isQuestion = (withQuestionMark && row === 2 && col === 2);
-            drawSquare(ctx, row, col, cellSize, letter, color, isQuestion);
+            drawSquare(ctx, row, col, cellSize, letter, isQuestion);
         }
     }
 }

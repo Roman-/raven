@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import {generate2dGrid, generateThreeColors, generateThreeEmojis} from "@/js/generators";
+import {generate2dGrid, generateThreeEmojis} from "@/js/generators";
 import {drawGrid} from "@/js/drawers";
 
 const canvasSize = ref(600); // The pixel size of each cell in the grid
@@ -21,7 +21,6 @@ const generateAndDraw = () => {
   grid.value = generate2dGrid()
   propPicks.value = {
     "fg": generateThreeEmojis(true),
-    "bg": generateThreeColors(true),
   };
   possibleAnswers.value = propPicks.value.fg
   const indexOfAnswer = grid.value[2][2];
