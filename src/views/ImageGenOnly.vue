@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+  <div style="max-width: 900px; margin: 0 auto; text-align: center;">
     <canvas ref="myCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
 
     <div style="margin-top: 20px;">
@@ -13,75 +13,44 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-
-// IMPORTANT: we rely on your existing helpers, so we do NOT redefine them here
-// E.g.: import { shuffle } from '@/js/helpers';
-import { shuffle } from '@/js/helpers';
+import { shuffle } from '@/js/helpers'
+import {generate2dGrid, generateThreeEmojis} from "@/js/generators";
 
 // ---------------------------------------------------
-// 1. Basic config
+// 1. Dimensions & Basic Config
 // ---------------------------------------------------
-const margin = 50;      // margin around the puzzle
-const cellSize = 100;   // each cell is 100×100
+// We want a bigger canvas for printing without losing resolution.
+// - 3 cells across & down, each cell = 200×200 => 600×600 puzzle
+// - 100px margin on each side => total width = 800
+// - After the puzzle, place answers with minimal gap => total height ~880
+// Adjust these as you see fit.
+
+const margin = 100;    // top/left/bottom/right margin
+const cellSize = 200;  // each grid cell
 const gridRows = 3;
 const gridCols = 3;
 
-const gridWidth = cellSize * gridCols;  // 300
-const gridHeight = cellSize * gridRows; // 300
+const gridWidth = cellSize * gridCols;    // 600
+const gridHeight = cellSize * gridRows;   // 600
 
-// We'll put the answers below the grid with some extra spacing
-// so total canvas height is gridHeight + some extra
-const answersSectionHeight = 150;
-const canvasWidth = ref(gridWidth + margin * 2);    // 300 + 100 = 400
-const canvasHeight = ref(gridHeight + margin * 2 + answersSectionHeight); // 300 + 100 + 150 = 550
+// Final canvas dimension (width x height)
+const canvasWidth = ref(gridWidth + margin * 2); // 600 + 200 = 800
+// We'll place the answers a bit below the puzzle, leaving some bottom margin
+const canvasHeight = ref(880); // Chosen to have a bit of space under answers
 
 const myCanvas = ref(null);
-
-// ---------------------------------------------------
-// 2. Data generation
-//    a) A fixed 3×3 pattern with no repeats per row/col
-//    b) Randomly pick 3 emojis, shuffle them for indices 0,1,2
-// ---------------------------------------------------
-function generateFixedGrid() {
-  // A simple 3×3 Latin square: each row, col has unique indices
-  return [
-    [0, 1, 2],
-    [2, 0, 1],
-    [1, 2, 0]
-  ];
-}
-
-function generateThreeEmojis() {
-  // You can pick from a bigger pool if you want
-  const emojiPool = ["🍎", "🍌", "🍇", "🍉", "🍑", "🍒", "🥑", "🌽", "🥕"];
-  shuffle(emojiPool);       // from your helpers
-  // Grab first 3
-  return emojiPool.slice(0, 3);
-}
 
 // ---------------------------------------------------
 // 3. Drawing
 // ---------------------------------------------------
 
-// A gentle gradient background
+// Just fill with a white background (or do your gradient if you prefer).
 function fillBackground(ctx) {
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvasWidth.value, canvasHeight.value);
-
-  // If you want a simple color fill or your own gradient logic:
-  // (This is a simpler approach, but you can still do your pleasant gradient if you like)
-  //
-  // // Example random gradient:
-  // const rndCoord = () => Math.random() > 0.5 ? 0 : canvasWidth.value;
-  // const gradient = ctx.createLinearGradient(rndCoord(), rndCoord(), rndCoord(), rndCoord());
-  // gradient.addColorStop(0, "#DCF1FF");
-  // gradient.addColorStop(0.5, "#F0E7FF");
-  // gradient.addColorStop(1, "#FFDCE1");
-  // ctx.fillStyle = gradient;
-  // ctx.fillRect(0, 0, canvasWidth.value, canvasHeight.value);
 }
 
-// Draw the 3×3 puzzle
+// Draw the 3×3 puzzle grid with a question mark in bottom-right
 function drawGrid(ctx, grid, emojis) {
   for (let r = 0; r < gridRows; r++) {
     for (let c = 0; c < gridCols; c++) {
@@ -89,7 +58,7 @@ function drawGrid(ctx, grid, emojis) {
       const x = margin + c * cellSize;
       const y = margin + r * cellSize;
 
-      // Draw the cell outline
+      // Cell outline
       ctx.strokeStyle = "#000";
       ctx.lineWidth = 2;
       ctx.strokeRect(x, y, cellSize, cellSize);
@@ -103,7 +72,6 @@ function drawGrid(ctx, grid, emojis) {
         ctx.textBaseline = "middle";
         ctx.fillText("?", x + cellSize / 2, y + cellSize / 2);
       } else {
-        // The index in the emojis array
         const index = grid[r][c];
         const symbol = emojis[index];
 
@@ -117,21 +85,28 @@ function drawGrid(ctx, grid, emojis) {
   }
 }
 
-// Draw the 3 answers in dashed circles below the grid
+// Draw the 3 answers in dashed circles below the puzzle
 function drawAnswers(ctx, answers) {
-  // We'll place them in a row near the bottom of the canvas
-  const radius = 30;
-  const circleY = margin + gridHeight + 70; // some offset below the grid
+  // We'll place them horizontally spaced in the bottom area.
+  // Let's pick a radius bigger than before (diameter ~120).
+  const radius = 60;
 
-  // Spread them horizontally across the canvas
-  // (4 equal segments -> pick center points for 3 circles)
+  // We'll place them ~80px below the puzzle's bottom edge
+  // so puzzle bottom is margin + gridHeight = 100 + 600 = 700
+  // circles' centerY = 700 + 80 = 780
+  // That leaves 100 left to bottom of canvasHeight=880 => 20 px clearance
+  const centerY = margin + gridHeight + 80; // 780
+
+  // We have an 800px wide canvas. We'll space the 3 circles evenly.
+  // 4 segments => centers at x=200, 400, 600
   const stepX = canvasWidth.value / 4;
 
-  ctx.lineWidth = 3;
-  ctx.setLineDash([8, 6]); // dashed line
+  // Thin, dashed outline
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 6]);
+
   for (let i = 0; i < answers.length; i++) {
     const centerX = stepX * (i + 1);
-    const centerY = circleY;
 
     // Draw dashed circle
     ctx.beginPath();
@@ -139,45 +114,39 @@ function drawAnswers(ctx, answers) {
     ctx.strokeStyle = "#000";
     ctx.stroke();
 
-    // Draw the emoji smaller inside
+    // Draw the emoji inside
     ctx.fillStyle = "#000";
-    ctx.font = `${radius * 1.4}px Arial`;
+    ctx.font = `${radius}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(answers[i], centerX, centerY);
   }
-  // Reset line dash
+
+  // Reset dash
   ctx.setLineDash([]);
 }
 
 // ---------------------------------------------------
-// 4. Main puzzle generation and rendering
+// 4. Main puzzle generation + rendering
 // ---------------------------------------------------
-let puzzleGrid;   // 3×3 array of indices
-let puzzleEmojis; // array of 3 emojis
+let puzzleGrid;
+let puzzleEmojis;
 
 function drawPuzzle() {
   const ctx = myCanvas.value.getContext('2d');
 
-  // 1) Fill background
   fillBackground(ctx);
-
-  // 2) Draw the puzzle grid
   drawGrid(ctx, puzzleGrid, puzzleEmojis);
-
-  // 3) Draw the answers at the bottom
   drawAnswers(ctx, puzzleEmojis);
 }
 
 function generateAndDraw() {
-  // Fixed 3×3 pattern (no repeating item in any row/col)
-  puzzleGrid = generateFixedGrid();
-  // Shuffle and pick 3 emojis
-  puzzleEmojis = generateThreeEmojis();
-  // Render
+  puzzleGrid = generate2dGrid()
+  puzzleEmojis = generateThreeEmojis(true);
   drawPuzzle();
 }
 
+// Download as PNG
 function downloadImage() {
   const link = document.createElement('a');
   link.download = 'my_puzzle.png';
@@ -185,6 +154,7 @@ function downloadImage() {
   link.click();
 }
 
+// Initialize on mount
 onMounted(() => {
   generateAndDraw();
 });
@@ -194,10 +164,9 @@ onMounted(() => {
 .btn {
   padding: 10px 16px;
   font-size: 16px;
-  margin: 0 5px;
-  cursor: pointer;
   background-color: #ccc;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
 }
 </style>
