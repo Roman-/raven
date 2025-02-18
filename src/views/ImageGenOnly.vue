@@ -162,27 +162,15 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.btn {
-  padding: 10px 16px;
-  font-size: 16px;
-  background-color: #ccc;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-</style>
-
 <template>
   <div style="max-width: 900px; margin: 0 auto; text-align: center;">
     <canvas ref="myCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
 
-    <div style="margin-top: 20px;">
-      <button @click="downloadImage" class="btn">Download Image</button>
-      <button @click="generateAndDraw" class="btn" style="margin-left: 10px;">
+    <div class="flex justify-center gap-2 mt-4">
+      <button @click="downloadImage" class="btn btn-neutral">Download Image</button>
+      <button @click="generateAndDraw" class="btn  btn-neutral">
         Generate Next Image
       </button>
     </div>
   </div>
 </template>
-
