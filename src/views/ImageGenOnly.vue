@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import {randomElement, shuffle} from '@/js/helpers'
+import {downloadCanvasAsPNG, randomElement, shuffle} from '@/js/helpers'
 import {generate2dGrid, generateThreeEmojis} from "@/js/generators";
 
 // ---------------------------------------------------
@@ -147,15 +147,6 @@ function generateAndDraw() {
   drawPuzzle();
 }
 
-// Download as PNG
-function downloadImage() {
-  const link = document.createElement('a');
-  link.download = `puzzle${imgNumber.value}.png`;
-  imgNumber.value += 1
-  link.href = myCanvas.value.toDataURL("image/png");
-  link.click();
-}
-
 // Initialize on mount
 onMounted(() => {
   generateAndDraw();
@@ -167,7 +158,7 @@ onMounted(() => {
     <canvas ref="myCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
 
     <div class="flex justify-center gap-2 mt-4">
-      <button @click="downloadImage" class="btn btn-neutral">Download Image</button>
+      <button @click="downloadCanvasAsPNG(myCanvas, `puzzle${++imgNumber}.png`)" class="btn btn-neutral">Download Image</button>
       <button @click="generateAndDraw" class="btn  btn-neutral">
         Generate Next Image
       </button>
