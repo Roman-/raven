@@ -3,7 +3,7 @@ import {randomElement, shuffle} from "@/js/helpers";
 import {bgColors, emojiCategories} from "@/js/property_sets";
 
 export const generateAlignedGrid = () => {
-    return Math.random() > 0.5 ? [[1,1,1], [2,2,2], [3,3,3]] : [[1,2,3], [1,2,3], [1,2,3]];
+    return Math.random() > 0.5 ? [[0, 0, 0], [1, 1, 1], [2, 2, 2]] : [[0, 1, 2], [0, 2, 1], [0, 1, 2]]
 }
 export const generatePermutedGrid = () => {
     const permutations = [
@@ -41,7 +41,7 @@ const sameThreeElements = (array) => {
     return [picked, picked, picked];
 }
 
-const threeElements = (array, isDifferent) => {
+export const threeElements = (array, isDifferent) => {
     return isDifferent ? randomThreeElements(array) : sameThreeElements(array);
 }
 

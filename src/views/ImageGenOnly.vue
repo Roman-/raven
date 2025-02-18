@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import {downloadCanvasAsPNG, randomElement, shuffle} from '@/js/helpers'
-import {generateAlignedGrid,
+import {
+  generateAlignedGrid,
   generatePermutedGrid,
-  generateThreeEmojis
+  generateThreeEmojis, threeElements
 } from "@/js/generators";
 import { fillWithPleasantGradient } from "@/js/drawers";
+import {bgNatureEmojis, fgAnimalsEmojis} from "@/js/property_sets";
 
 // ---------------------------------------------------
 // 1. Dimensions & Basic Config
@@ -37,7 +39,7 @@ function fillBackground(ctx) {
 }
 
 // Draw the 3×3 puzzle grid with a question mark in bottom-right
-function drawGrid(ctx, grid, emojis) {
+function drawGrid(ctx, bgGrid, bgEmojis, fgGrid, fgEmojis) {
   for (let r = 0; r < gridRows; r++) {
     for (let c = 0; c < gridCols; c++) {
       const x = margin + c * cellSize;
@@ -48,24 +50,32 @@ function drawGrid(ctx, grid, emojis) {
       ctx.strokeRect(x, y, cellSize, cellSize);
 
       // question mark in bottom-right cell
-      // const isQuestion = (r === 2 && c === 2);
+      // const isQuestion = (r === 2 && c === 2); // TODO random
       const isQuestion = false
       if (isQuestion) {
-        ctx.fillStyle = "#000";
         ctx.font = `${cellSize * 0.7}px Arial`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("?", x + cellSize / 2, y + cellSize / 2);
-      } else {
-        const index = grid[r][c];
-        const symbol = emojis[index];
-
-        ctx.fillStyle = "#000";
-        ctx.font = `${cellSize * 0.7}px Arial`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(symbol, x + cellSize / 2, y + cellSize / 2);
+        continue;
       }
+      // bg emoji
+      const bgIndex = bgGrid[r][c];
+      const bgSymbol = bgEmojis[bgIndex];
+
+      ctx.font = `${cellSize * 0.8}px Arial`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(bgSymbol, x + cellSize / 2, y + cellSize / 2);
+
+      // fg emoji
+      const fgIndex = fgGrid[r][c];
+      const fgSymbol = fgEmojis[fgIndex];
+
+      ctx.font = `${cellSize * 0.5}px Arial`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.fillText(fgSymbol, x + cellSize / 2, y + cellSize / 2);
     }
   }
 }
@@ -107,11 +117,13 @@ function generateAndDraw() {
   let grids = [generateAlignedGrid(), generatePermutedGrid()]
   shuffle(grids)
 
-  let puzzleEmojis = generateThreeEmojis(true);
+  let threeFgEmojis = threeElements(fgAnimalsEmojis, true)
+  console.log("threeFgEmojis", threeFgEmojis);
+  let threeBgEmojis = threeElements(bgNatureEmojis, true)
   const ctx = myCanvas.value.getContext('2d');
   fillBackground(ctx);
-  drawGrid(ctx, generateAlignedGrid(), puzzleEmojis);
-  drawAnswers(ctx, puzzleEmojis);
+  drawGrid(ctx, grids[0], threeBgEmojis, grids[1], threeFgEmojis);
+  // drawAnswers(ctx, puzzleEmojis);
 }
 
 // Initialize on mount
