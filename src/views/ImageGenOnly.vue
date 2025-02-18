@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import {downloadCanvasAsPNG, randomElement, shuffle} from '@/js/helpers'
-import {generate2dGrid, generateThreeEmojis} from "@/js/generators";
+import {generateAlignedGrid,
+  generatePermutedGrid,
+  generateThreeEmojis
+} from "@/js/generators";
 import { fillWithPleasantGradient } from "@/js/drawers";
 
 // ---------------------------------------------------
@@ -45,7 +48,8 @@ function drawGrid(ctx, grid, emojis) {
       ctx.strokeRect(x, y, cellSize, cellSize);
 
       // question mark in bottom-right cell
-      const isQuestion = (r === 2 && c === 2);
+      // const isQuestion = (r === 2 && c === 2);
+      const isQuestion = false
       if (isQuestion) {
         ctx.fillStyle = "#000";
         ctx.font = `${cellSize * 0.7}px Arial`;
@@ -97,25 +101,17 @@ function drawAnswers(ctx, answers) {
   ctx.setLineDash([]);
 }
 
-// ---------------------------------------------------
-// 4. Main puzzle generation + rendering
-// ---------------------------------------------------
-let puzzleGrid;
-let puzzleEmojis;
-
-function drawPuzzle() {
-  const ctx = myCanvas.value.getContext('2d');
-
-  fillBackground(ctx);           // fill with the gradient
-  drawGrid(ctx, puzzleGrid, puzzleEmojis);
-  drawAnswers(ctx, puzzleEmojis);
-}
-
 // Generate random puzzle grid & emojis, then draw
 function generateAndDraw() {
-  puzzleGrid = generate2dGrid();
-  puzzleEmojis = generateThreeEmojis(true);
-  drawPuzzle();
+  // one grid is rowwise, the other is columnwise
+  let grids = [generateAlignedGrid(), generatePermutedGrid()]
+  shuffle(grids)
+
+  let puzzleEmojis = generateThreeEmojis(true);
+  const ctx = myCanvas.value.getContext('2d');
+  fillBackground(ctx);
+  drawGrid(ctx, generateAlignedGrid(), puzzleEmojis);
+  drawAnswers(ctx, puzzleEmojis);
 }
 
 // Initialize on mount

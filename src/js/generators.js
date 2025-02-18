@@ -2,7 +2,10 @@
 import {randomElement, shuffle} from "@/js/helpers";
 import {bgColors, emojiCategories} from "@/js/property_sets";
 
-export const generate2dGrid = () => {
+export const generateAlignedGrid = () => {
+    return Math.random() > 0.5 ? [[1,1,1], [2,2,2], [3,3,3]] : [[1,2,3], [1,2,3], [1,2,3]];
+}
+export const generatePermutedGrid = () => {
     const permutations = [
         [1, 2, 0],
         [1, 0, 2],
