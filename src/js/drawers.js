@@ -1,5 +1,5 @@
 // Helper function to draw one square
-import {shuffle} from "@/js/helpers";
+import {randomElement, shuffle} from "@/js/helpers";
 
 function drawSquare(ctx, row, col, cellSize, letter, isQuestion) {
     const x = col * cellSize;
@@ -25,16 +25,28 @@ function drawSquare(ctx, row, col, cellSize, letter, isQuestion) {
     ctx.fillText(letter, x + cellSize / 2, y + cellSize / 2);
 }
 
-function fillWithPleasantGradient(ctx, canvasSize) {
+export function fillWithPleasantGradient(ctx, canvasSize) {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvasSize, canvasSize);
 
-    const rnd = () => Math.random() > 0.5 ? 0 : canvasSize;
-    const gradient = ctx.createLinearGradient(rnd(), rnd(), rnd(), rnd());
-    const colors = shuffle([ "#DCF1FF", "#F0E7FF", "#FFDCE1"])
+    let directions = [
+        [0, 0, canvasSize, canvasSize], // diagonal (top-left to bottom-right)
+        [canvasSize, 0, 0, canvasSize], // diagonal (top-right to bottom-left)
+        [0, 0, 0, canvasSize], // vertical (left to right)
+        [0, 0, canvasSize, 0], // horizontal (top to bottom)
+        [canvasSize / 2, 0, canvasSize / 2, canvasSize], // centered vertical
+        [0, canvasSize / 2, canvasSize, canvasSize / 2], // centered horizontal
+    ];
+
+    const d = randomElement(directions);
+    const gradient = ctx.createLinearGradient(d[0], d[1], d[2], d[3]);
+
+    const colors = shuffle(["#DCF1FF", "#F0E7FF", "#FFDCE1"]);
+
     gradient.addColorStop(0, colors[0]);
     gradient.addColorStop(0.5, colors[1]);
     gradient.addColorStop(1, colors[2]);
+
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvasSize, canvasSize);
 }

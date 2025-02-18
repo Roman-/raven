@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import {downloadCanvasAsPNG, randomElement, shuffle} from '@/js/helpers'
 import {generate2dGrid, generateThreeEmojis} from "@/js/generators";
+import { fillWithPleasantGradient } from "@/js/drawers";
 
 // ---------------------------------------------------
 // 1. Dimensions & Basic Config
@@ -12,44 +13,14 @@ const gridRows = 3;
 const gridCols = 3;
 const imgNumber = ref(1)
 
-const gridWidth = cellSize * gridCols;    // 600
-const gridHeight = cellSize * gridRows;   // 600
+const gridWidth = cellSize * gridCols;
+const gridHeight = cellSize * gridRows;
 
 // Final canvas dimension (width x height)
-const canvasWidth = ref(gridWidth + margin * 2); // 600 + 200 = 800
-const canvasHeight = ref(880); // Enough space for answers below puzzle
+const canvasWidth = ref(gridWidth + margin * 2);
+const canvasHeight = ref(canvasWidth.value + margin);
 
 const myCanvas = ref(null);
-
-// ---------------------------------------------------
-// 2. Gradient Background
-// ---------------------------------------------------
-// Provided snippet: fill the rectangle with a pleasant gradient in random direction
-function fillWithPleasantGradient(ctx, canvasSize) {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-  let directions = [
-    [0, 0, canvasSize, canvasSize], // diagonal (top-left to bottom-right)
-    [canvasSize, 0, 0, canvasSize], // diagonal (top-right to bottom-left)
-    [0, 0, 0, canvasSize], // vertical (left to right)
-    [0, 0, canvasSize, 0], // horizontal (top to bottom)
-    [canvasSize / 2, 0, canvasSize / 2, canvasSize], // centered vertical
-    [0, canvasSize / 2, canvasSize, canvasSize / 2], // centered horizontal
-  ];
-
-  const d = randomElement(directions);
-  const gradient = ctx.createLinearGradient(d[0], d[1], d[2], d[3]);
-
-  const colors = shuffle(["#DCF1FF", "#F0E7FF", "#FFDCE1"]);
-
-  gradient.addColorStop(0, colors[0]);
-  gradient.addColorStop(0.5, colors[1]);
-  gradient.addColorStop(1, colors[2]);
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvasSize, canvasSize);
-}
 
 // ---------------------------------------------------
 // 3. Drawing
@@ -154,7 +125,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+  <div>
     <canvas ref="myCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
 
     <div class="flex justify-center gap-2 mt-4">
