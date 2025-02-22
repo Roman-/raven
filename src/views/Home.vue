@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import {drawPuzzleGrid} from "@/js/draw_puzzle";
+import {drawPuzzleGrid} from "@/js/drawer";
 import {store} from "@/store/store";
 
 const puzzleCanvasSize = ref(0);

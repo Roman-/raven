@@ -19,9 +19,20 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell)
             ctx.strokeRect(cellX, cellY, cellSize, cellSize);
 
             ctx.save()
-            drawCell(ctx, cell, cellX, cellY, cellSize)
+            if (cell.isAnswer) {
+                drawQuestionMark(ctx, cellX, cellY, cellSize)
+            } else {
+                drawCell(ctx, cell, cellX, cellY, cellSize)
+            }
             ctx.restore()
         }
     }
 }
 
+const drawQuestionMark = (ctx, x, y, size) => {
+    // Optionally draw a big "?" in the center:
+    ctx.font = `${Math.floor(size * 0.6)}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("?", x + size / 2, y + size / 2);
+}
