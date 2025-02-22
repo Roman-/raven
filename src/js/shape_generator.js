@@ -1,4 +1,4 @@
-import { shuffle, randomElement, threeRandomElements } from '@/js/helpers'
+import { randomElement, threeRandomElements } from '@/js/helpers'
 
 export class ShapeGenerator {
     // Static description of features and their possible variations
@@ -32,8 +32,7 @@ export class ShapeGenerator {
                 // For each feature, pick from chosenVariationsForFeature based on grids[featureIndex][row][col]
                 featureNames.forEach((feature, featureIndex) => {
                     const gridValue = grids[featureIndex][row][col] // 0,1,2
-                    const variation = chosenVariationsForFeature[feature][gridValue]
-                    cell[feature] = variation
+                    cell[feature] = chosenVariationsForFeature[feature][gridValue]
                 })
                 cell.isAnswer = false
                 puzzle[row][col] = cell
