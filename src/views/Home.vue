@@ -1,28 +1,28 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
-import {generateCellsAndAnswers} from "@/js/generator";
-import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {drawPuzzleGrid} from "@/js/draw_puzzle";
+import {store} from "@/store/store";
 
-const canvasWidth = ref(500);
-const canvasHeight = ref(500);
-const myCanvas = ref(null);
+const puzzleCanvasSize = ref(0);
+const puzzleCanvas = ref(null);
 
 onMounted(() => {
-  const flavor = shapeFlavor;
-  const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
-  const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
-  const cellsAndAnswers = generateCellsAndAnswers(grids, flavor, 6);
-  console.log(cellsAndAnswers);
-  drawPuzzleGrid(myCanvas.value.getContext('2d'), 0, 0, canvasWidth.value, cellsAndAnswers.cells, flavor.drawCell);
+  // min of window w/h * 0.8
+  puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.8);
+  store.commit('generate');
+  setTimeout(draw, 1);
 })
+
+const draw = () => {
+  drawPuzzleGrid(puzzleCanvas.value.getContext('2d'), 0, 0,
+      puzzleCanvasSize.value, store.getters.cells, store.getters.drawShapeFunction);
+}
 
 </script>
 
 <template>
   <div class="flex justify-center gap-2 mt-4">
-    <canvas ref="myCanvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+    <canvas ref="puzzleCanvas" :width="puzzleCanvasSize" :height="puzzleCanvasSize"/>
   </div>
 </template>
 
