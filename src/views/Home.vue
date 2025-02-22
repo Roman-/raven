@@ -1,21 +1,19 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import {ShapeGenerator} from "@/js/shape_generator";
-import {ShapeDrawer} from "@/js/shape_drawer";
 import {generateSetOfGrids, generateSetOfGridsMaximumDifficulty} from "@/js/grids";
+import {generateCellsAndAnswers} from "@/js/generator";
+import {shapeFlavor} from "@/js/puzzle_flavors/shape_flavor";
+import {drawPuzzleGrid} from "@/js/draw_puzzle";
 
 const canvasWidth = ref(500);
 const canvasHeight = ref(500);
 const myCanvas = ref(null);
 
 onMounted(() => {
-  let gen = new ShapeGenerator;
-  let puzzle = gen.generate(generateSetOfGrids(4, 1), 6);
-  console.log(puzzle);
-
-  const drawer = new ShapeDrawer;
-  drawer.drawPuzzle(myCanvas.value.getContext('2d'), 0, 0, canvasWidth.value, puzzle.puzzle);
-
+  const flavor = shapeFlavor;
+  const cellsAndAnswers = generateCellsAndAnswers(generateSetOfGridsMaximumDifficulty(2), flavor, 6);
+  console.log(cellsAndAnswers);
+  drawPuzzleGrid(myCanvas.value.getContext('2d'), 0, 0, canvasWidth.value, cellsAndAnswers.cells, flavor.drawCell);
 })
 
 </script>
