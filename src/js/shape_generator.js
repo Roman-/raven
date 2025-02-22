@@ -1,16 +1,17 @@
-import { randomElement, threeRandomElements } from '@/js/helpers'
+import {randomElement, shuffle, threeRandomElements} from '@/js/helpers'
 
 export class ShapeGenerator {
     // Static description of features and their possible variations
     static FEATURES_DESCRIPTION = {
-        color: ["red", "green", "blue"],
+        color: ["#DCD7C9", "#A27B5C", "#3F4F44"],
         shape: ["circle", "triangle", "square", "pentagon"],
-        lineThickness: [1, 3, 10],
-        lineColor: ["black", "maroon", "navy"]
+        lineThickness: [5, 10, 20],
+        lineColor: ["#C63C51", "#8C3061", "#522258"]
     }
 
     /// @param {Array} grids - An array of 2D grids (3x3), each grid corresponds to a feature.
     generate(grids, numAnswers) {
+        shuffle(grids) // assign different grids for properties in each puzzle
         const featureNames = Object.keys(ShapeGenerator.FEATURES_DESCRIPTION)
         if (grids.length !== featureNames.length) {
             throw new Error(`Expected ${featureNames.length} grids, got ${grids.length}`)
@@ -40,7 +41,7 @@ export class ShapeGenerator {
         }
 
         let answerCell = puzzle[Math.floor(Math.random() * 3)][Math.floor(Math.random() * 3)]
-        answerCell.isQuestion = true
+        answerCell.isAnswer = true
 
         // Build the answers array. The first one is the correct answer.
         const answers = [ answerCell ]
