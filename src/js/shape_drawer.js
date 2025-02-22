@@ -9,6 +9,9 @@ export class ShapeDrawer {
      * @param {Array} puzzle - 3×3 array of cell objects to draw.
      */
     drawPuzzle(ctx, startX, startY, puzzleSize, puzzle) {
+        ctx.fillStyle = "#fff"
+        ctx.fillRect(startX, startY, puzzleSize, puzzleSize)
+
         const cellSize = puzzleSize / 3
 
         for (let row = 0; row < 3; row++) {

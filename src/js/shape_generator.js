@@ -3,15 +3,14 @@ import {randomElement, shuffle, threeRandomElements} from '@/js/helpers'
 export class ShapeGenerator {
     // Static description of features and their possible variations
     static FEATURES_DESCRIPTION = {
-        color: ["#DCD7C9", "#A27B5C", "#3F4F44"],
+        color: ["#FFD23F", "#337357", "#EE4266"],
         shape: ["circle", "triangle", "square", "pentagon"],
         lineThickness: [5, 10, 20],
-        lineColor: ["#C63C51", "#8C3061", "#522258"]
+        lineColor: ["#6895D2", "#2C4E80", "#5E1675"]
     }
 
     /// @param {Array} grids - An array of 2D grids (3x3), each grid corresponds to a feature.
     generate(grids, numAnswers) {
-        shuffle(grids) // assign different grids for properties in each puzzle
         const featureNames = Object.keys(ShapeGenerator.FEATURES_DESCRIPTION)
         if (grids.length !== featureNames.length) {
             throw new Error(`Expected ${featureNames.length} grids, got ${grids.length}`)
@@ -23,6 +22,8 @@ export class ShapeGenerator {
         for (const feature of featureNames) {
             chosenVariationsForFeature[feature] = threeRandomElements(ShapeGenerator.FEATURES_DESCRIPTION[feature])
         }
+
+        grids = shuffle(grids)
 
         // Build the puzzle as a 3x3 array of cell objects
         const puzzle = []
