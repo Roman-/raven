@@ -11,7 +11,9 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell)
             const cell = cells[row][col]
             const cellX = startX + col * cellSize
             const cellY = startY + row * cellSize
+            ctx.save()
             drawCell(ctx, cell, cellX, cellY, cellSize)
+            ctx.restore()
         }
     }
 }

@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import {generateSetOfGrids, generateSetOfGridsMaximumDifficulty} from "@/js/grids";
+import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
-import {shapeFlavor} from "@/js/puzzle_flavors/shape_flavor";
+import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {drawPuzzleGrid} from "@/js/draw_puzzle";
 
 const canvasWidth = ref(500);
