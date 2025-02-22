@@ -31,10 +31,13 @@ export const randomElement = (array) => {
     return array[Math.floor(Math.random() * array.length)]
 }
 
-// @returns current date in format DD-MM-YYYY
-export function getCurrentDateString() {
-    let t = new Date()
-    return `${t.getDate()}-${t.getMonth() + 1}-${t.getFullYear()}`
+export const threeRandomElements = (array) => {
+    if (array.length < 3) {
+        throw new Error("threeRandomElements: array must have at least 3 elements, got " + JSON.stringify(array))
+    }
+    const copy = [...array];
+    shuffle(copy);
+    return copy.slice(0, 3);
 }
 
 // turn current <canvas> content into image

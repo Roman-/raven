@@ -1,7 +1,3 @@
-// generates matrix like [[123][231][312]] where no rows nor cols have same number
-import {randomElement, shuffle} from "@/js/helpers";
-import {bgColors, emojiCategories} from "@/js/property_sets";
-
 export const generateAlignedGrid = (isRowwise = -1) => {
     if (isRowwise === -1) {
         isRowwise = Math.random() > 0.5;
@@ -48,28 +44,3 @@ export const generateSetOfGrids = (numFeatures, numNonConstantFeatures) => {
     }
     return grids;
 }
-
-const randomThreeElements = (array) => {
-    const copy = [...array];
-    shuffle(copy);
-    return copy.slice(0, 3);
-}
-
-const sameThreeElements = (array) => {
-    const picked = randomElement(array)
-    return [picked, picked, picked];
-}
-
-export const threeElements = (array, isDifferent) => {
-    return isDifferent ? randomThreeElements(array) : sameThreeElements(array);
-}
-
-export const generateThreeColors = (different) => {
-    return threeElements(bgColors, different);
-}
-
-export const generateThreeEmojis = (different) => {
-    const category = randomElement(emojiCategories)
-    return threeElements(category, different);
-}
-
