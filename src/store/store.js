@@ -3,7 +3,6 @@ import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {generateCellsAndAnswers} from "@/js/generator";
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 
-// 'coins' is just for example
 export const store = createStore({
     strict: true,
     state () {
@@ -20,7 +19,7 @@ export const store = createStore({
         answers (state) {
             return state.cellsAndAnswers.answers
         },
-        drawShapeFunction (state) {
+        drawCell (state) {
             return state.flavor.drawCell
         }
     },
