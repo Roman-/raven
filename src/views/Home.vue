@@ -11,7 +11,9 @@ const myCanvas = ref(null);
 
 onMounted(() => {
   const flavor = shapeFlavor;
-  const cellsAndAnswers = generateCellsAndAnswers(generateSetOfGridsMaximumDifficulty(2), flavor, 6);
+  const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
+  const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
+  const cellsAndAnswers = generateCellsAndAnswers(grids, flavor, 6);
   console.log(cellsAndAnswers);
   drawPuzzleGrid(myCanvas.value.getContext('2d'), 0, 0, canvasWidth.value, cellsAndAnswers.cells, flavor.drawCell);
 })
