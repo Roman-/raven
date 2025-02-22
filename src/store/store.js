@@ -1,7 +1,8 @@
+// filename: src/store/store.js
 import { createStore } from 'vuex'
-import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
-import {generateCellsAndAnswers} from "@/js/generator";
-import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
+import { shapeFlavor } from "@/js/puzzle_flavors/shapeFlavor";
+import { generateCellsAndAnswers } from "@/js/generator";
+import { generateSetOfGridsMaximumDifficulty } from "@/js/grids";
 
 export const store = createStore({
     strict: true,
@@ -10,25 +11,57 @@ export const store = createStore({
             flavor: shapeFlavor,
             cellsAndAnswers: null,
             numAnswers: 6,
+
+            // New for "interactive" puzzle:
+            selectedAnswerIndex: null,
+            isAnswerRevealed: false,
         }
     },
     getters: {
+        // The 3x3 cells to be drawn in the puzzle
         cells (state) {
-            return state.cellsAndAnswers.cells
+            // Safeguard if cellsAndAnswers is null
+            return state.cellsAndAnswers?.cells || [];
         },
         answers (state) {
-            return state.cellsAndAnswers.answers
+            return state.cellsAndAnswers?.answers || [];
         },
         drawCell (state) {
             return state.flavor.drawCell
+        },
+        // For clarity, the correct answer is always at index 0 (per generator.js)
+        correctAnswerIndex () {
+            return 0;
+        },
+        // Helper: did the player pick the correct answer?
+        isAnswerCorrect (state, getters) {
+            if (state.selectedAnswerIndex == null) return false;
+            return state.selectedAnswerIndex === getters.correctAnswerIndex;
         }
     },
     mutations: {
+        // Generate a new puzzle
         generate (state) {
             const numFeatures = Object.keys(state.flavor.getFeaturesVariations()).length;
             const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
-            state.cellsAndAnswers = generateCellsAndAnswers(grids, state.flavor, state.numAnswers);
+
+            // Build puzzle + answers
+            state.cellsAndAnswers = generateCellsAndAnswers(
+                grids,
+                state.flavor,
+                state.numAnswers
+            );
+
+            // Reset interactive state
+            state.selectedAnswerIndex = null;
+            state.isAnswerRevealed = false;
         },
+        // Player clicked an answer: record it and reveal correctness
+        selectAnswer (state, index) {
+            // If we only allow one guess, just set once
+            state.selectedAnswerIndex = index;
+            state.isAnswerRevealed = true;
+        }
     },
     actions: {
     }

@@ -1,6 +1,9 @@
 // cells - 2D array of cell objects
 // drawCell - function that draws a single cell (ctx, cell, x, y, size)
 export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell) => {
+    if (!cells || cells.length === 0 || !drawCell) {
+        return;
+    }
     ctx.strokeStyle = "#00000055";
     ctx.lineWidth = 1;
     ctx.strokeRect(startX, startY, puzzleSize, puzzleSize);
