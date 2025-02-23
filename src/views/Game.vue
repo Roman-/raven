@@ -92,10 +92,6 @@ const dividerText = computed(() => {
   }
 });
 
-const dividerClass = computed(() => {
-  return store.state.isAnswerRevealed && store.getters.correctAnswerIndex !== store.state.selectedAnswerIndex ? 'divider-error' : ''
-})
-
 onMounted(() => {
   updateSizes();
 
@@ -118,8 +114,7 @@ onMounted(() => {
       { immediate: true }
   );
 
-  // Draw on canvas on init (bug)
-  setTimeout(drawAll, 1);
+  setTimeout(drawAll, 1); // otherwise the first draw is too fast to be rendered on init
 });
 
 onBeforeUnmount(() => {
@@ -138,7 +133,7 @@ onBeforeUnmount(() => {
         class="border border-gray-400"
     />
 
-    <div class="divider text-neutral-500 my-6" :class="dividerClass">{{dividerText}}</div>
+    <div class="divider text-neutral-500 my-6">{{dividerText}}</div>
 
     <div class="grid grid-cols-4 gap-2">
       <div
