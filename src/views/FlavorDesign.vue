@@ -26,7 +26,6 @@ const draw = () => {
 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
-    console.log("calling draw on ", answer);
     flavor.drawCell(ctx, answer, 0, 0, answerCanvasSize.value);
   });
 };

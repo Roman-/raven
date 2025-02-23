@@ -29,13 +29,13 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
             } else {
                 drawCell(ctx, cell, cellX, cellY, cellSize);
             }
+            ctx.restore();
             if (cell.isAnswer && answerStyle === 'r') {
                 const margin = 1
                 ctx.strokeStyle = "#000000";
                 ctx.lineWidth = margin
                 ctx.strokeRect(cellX + margin, cellY + margin, cellSize - margin * 2, cellSize - margin * 2);
             }
-            ctx.restore();
         }
     }
 };
