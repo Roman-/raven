@@ -1,12 +1,11 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import {drawPuzzleGrid} from "@/js/drawer";
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
 import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
-import {store} from "@/store/store";
+import {gradientsFlavor} from "@/js/puzzle_flavors/gradientsFlavor";
 
-const flavor = shapeFlavor; // change to the flavor you're working with
+const flavor = gradientsFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 
@@ -44,6 +43,9 @@ onMounted(() => {
 </script>
 
 <template>
+  <div>
+    {{flavor.name}}
+  </div>
   <div class="grid grid-cols-4 gap-2">
     <div
         v-for="(answer, index) in cellsAndAnswers?.answers || []"
@@ -53,7 +55,7 @@ onMounted(() => {
           :id="`answerCanvas${index}`"
           :width="answerCanvasSize"
           :height="answerCanvasSize"
-          class="border rounded"
+          class="border"
       />
     </div>
   </div>
