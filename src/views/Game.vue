@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
     ></canvas>
 
     <!-- Answers Row -->
-    <div class="flex gap-4 mt-6">
+    <div class="grid grid-cols-4 gap-2 mt-6">
       <div
           v-for="(answer, index) in store.getters.answers"
           :key="index"
@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
             :id="`answerCanvas${index}`"
             :width="answerCanvasSize"
             :height="answerCanvasSize"
-            class="border border-gray-300"
+            class="border border-gray-300 rounded-lg border-dashed"
             @click="onAnswerClicked(index)"
         />
       </div>
