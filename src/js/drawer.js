@@ -30,10 +30,10 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
                 drawCell(ctx, cell, cellX, cellY, cellSize);
             }
             if (cell.isAnswer && answerStyle === 'r') {
-                // outline a cell
-                ctx.strokeStyle = "#00990033";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(cellX, cellY, cellSize, cellSize);
+                const margin = 1
+                ctx.strokeStyle = "#000000";
+                ctx.lineWidth = margin
+                ctx.strokeRect(cellX + margin, cellY + margin, cellSize - margin * 2, cellSize - margin * 2);
             }
             ctx.restore();
         }

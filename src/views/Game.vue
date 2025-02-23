@@ -86,7 +86,7 @@ onMounted(() => {
 
   window.addEventListener('resize', () => {
     updateSizes();
-    drawAll();
+    setTimeout(drawAll, 1);
   });
 
   store.commit('generate');
