@@ -44,35 +44,6 @@ const drawAllAnswers = () => {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
 
-    // If puzzle is revealed, highlight correct & selected answers
-    if (store.state.isAnswerRevealed) {
-      // Always highlight the correct answer in a green outline
-      if (index === store.getters.correctAnswerIndex) {
-        ctx.save();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = '#00cc00';
-        ctx.strokeRect(2, 2, answerCanvasSize.value - 4, answerCanvasSize.value - 4);
-        ctx.restore();
-      }
-
-      // Also highlight the user's selection:
-      // - green outline if it's the correct answer
-      // - red outline if it's the wrong one
-      if (index === store.state.selectedAnswerIndex) {
-        ctx.save();
-        ctx.lineWidth = 5;
-        if (store.getters.isAnswerCorrect) {
-          // same as correct
-          ctx.strokeStyle = '#00cc00';
-        } else {
-          // wrong guess
-          ctx.strokeStyle = '#ff0000';
-        }
-        ctx.strokeRect(8, 8, answerCanvasSize.value - 16, answerCanvasSize.value - 16);
-        ctx.restore();
-      }
-    }
-
     // Now draw the shape for this answer
     store.getters.drawCell(ctx, answer, 0, 0, answerCanvasSize.value);
   });
@@ -88,6 +59,26 @@ const onAnswerClicked = (index) => {
 const updateSizes = () => {
   puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.5);
   answerCanvasSize.value = Math.round(puzzleCanvasSize.value * 0.2);
+};
+
+const answerCanvasClass = (index) => {
+  // No special classes if the puzzle hasn't been revealed yet
+  if (!store.state.isAnswerRevealed) {
+    return 'outline-gray-300 border-dashed';
+  }
+
+  const correctIndex = store.getters.correctAnswerIndex;
+  const selectedIndex = store.state.selectedAnswerIndex;
+
+  if (index === correctIndex) {
+    return 'outline outline-green-500 outline-2 border border-gray-300';
+  }
+
+  if (index === selectedIndex && selectedIndex !== correctIndex) {
+    return 'outline outline-red-500 outline-2 border border-gray-300';
+  }
+
+  return 'opacity-25 border border-gray-300 border-dashed';
 };
 
 onMounted(() => {
@@ -134,14 +125,14 @@ onBeforeUnmount(() => {
       <div
           v-for="(answer, index) in store.getters.answers"
           :key="index"
-          class="cursor-pointer"
       >
         <canvas
             :id="`answerCanvas${index}`"
             :width="answerCanvasSize"
             :height="answerCanvasSize"
-            class="border border-gray-300 rounded-lg border-dashed"
             @click="onAnswerClicked(index)"
+            class="cursor-pointer border rounded-lg box-border"
+            :class="answerCanvasClass(index)"
         />
       </div>
     </div>
