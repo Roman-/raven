@@ -2,6 +2,7 @@
 import {onMounted, ref, watch, onBeforeUnmount, computed} from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
+import {randomElement} from "@/js/helpers";
 
 // Main puzzle dimension
 const puzzleCanvasSize = ref(500);
@@ -84,9 +85,10 @@ const dividerText = computed(() => {
     return 'which completes the pattern?';
   }
   if (store.getters.correctAnswerIndex === store.state.selectedAnswerIndex) {
-    return 'nice!';
+    return randomElement(["nice!", "great!", "awesome!", "well done!", "keep it up!",
+      "fantastic!", "brilliant!", "excellent!"])
   } else {
-    return 'uh-oh';
+    return randomElement(["oops", "uh-oh", "nope", "nah", "ouch", "hmm", "meh", "whoops"])
   }
 });
 
