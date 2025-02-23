@@ -1,29 +1,62 @@
 <script setup>
 import {onMounted, ref, watch} from 'vue';
 import {drawPuzzleGrid} from "@/js/drawer";
+import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
+import {generateCellsAndAnswers} from "@/js/generator";
+import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {store} from "@/store/store";
 
-const puzzleCanvasSize = ref(0);
-const puzzleCanvas = ref(null);
+const flavor = shapeFlavor; // change to the flavor you're working with
+const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
+const numCanvases = 16
 
-onMounted(() => {
-  watch( () => store.state.cellsAndAnswers, draw, { deep: true } )
-  puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.8);
-  setTimeout(() => {store.commit('generate')}, 1);
-})
+const answerCanvasSize = ref(100);
+const cellsAndAnswers = ref(null);
+
+const generateNew = () => {
+  updateSizes()
+  cellsAndAnswers.value = generateCellsAndAnswers( generateSetOfGridsMaximumDifficulty(numFeatures), flavor, numCanvases );
+  setTimeout(draw, 1)
+}
 
 const draw = () => {
-  let ctx = puzzleCanvas.value.getContext('2d');
-  ctx.clearRect(0, 0, puzzleCanvasSize.value, puzzleCanvasSize.value);
-  drawPuzzleGrid(ctx, 0, 0, puzzleCanvasSize.value, store.getters.cells, store.getters.drawCell);
-}
+  console.log("cellsAndAnswers.value.answers", cellsAndAnswers.value.answers);
+  cellsAndAnswers.value.answers.forEach((answer, index) => {
+    const canvas = document.getElementById(`answerCanvas${index}`);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
+    console.log("calling draw on ", answer);
+    flavor.drawCell(ctx, answer, 0, 0, answerCanvasSize.value);
+  });
+};
+
+const updateSizes = () => {
+  const screenSize = Math.round(Math.min(window.innerWidth, window.innerHeight))
+  answerCanvasSize.value = Math.round(screenSize * 0.22);
+};
+
+onMounted(() => {
+  setTimeout(generateNew, 100);
+})
 
 </script>
 
 <template>
-  <div class="flex justify-center gap-2 mt-4">
-    <canvas ref="puzzleCanvas" :width="puzzleCanvasSize" :height="puzzleCanvasSize"/>
+  <div class="grid grid-cols-4 gap-2">
+    <div
+        v-for="(answer, index) in cellsAndAnswers?.answers || []"
+        :key="index"
+    >
+      <canvas
+          :id="`answerCanvas${index}`"
+          :width="answerCanvasSize"
+          :height="answerCanvasSize"
+          class="border rounded"
+      />
+    </div>
   </div>
-  <button class="btn btn-primary" @click="store.commit('generate')">Generate New Puzzle</button>
+  <button class="btn btn-primary" @click="generateNew">Generate New</button>
 </template>
 
