@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
 
@@ -15,42 +15,12 @@ const puzzleCanvas = ref(null);
 // Each answer's canvas dimension
 const answerCanvasSize = ref(100);
 
-// We watch the store's puzzle/answers. Whenever they change (like on generate),
-// we redraw the puzzle and answers.
+// Watch the store's puzzle/answers to redraw
 const drawAll = () => {
   drawPuzzle();
   drawAllAnswers();
 };
 
-onMounted(() => {
-  // Redraw whenever new puzzle is generated
-  watch(
-      () => store.state.cellsAndAnswers,
-      drawAll,
-      { deep: true }
-  );
-
-  // Also redraw if the reveal state changes (e.g., user picks an answer)
-  watch(
-      () => store.state.isAnswerRevealed,
-      drawAll,
-      { immediate: true }
-  );
-
-  // A simple approach for sizing the puzzle to window
-  puzzleCanvasSize.value = Math.round(
-      Math.min(window.innerWidth, window.innerHeight) * 0.5
-  );
-  // Let each answer be a fraction of the puzzle size
-  answerCanvasSize.value = Math.round(puzzleCanvasSize.value * 0.2);
-
-  // Generate puzzle on mount
-  setTimeout(() => {
-    store.commit('generate');
-  }, 1);
-});
-
-/** Draw the 3x3 puzzle with one question mark cell. */
 const drawPuzzle = () => {
   if (!puzzleCanvas.value) return;
   const ctx = puzzleCanvas.value.getContext('2d');
@@ -58,18 +28,20 @@ const drawPuzzle = () => {
 
   const cells = store.getters.cells;
 
+  // Pass in revealAnswer = store.state.isAnswerRevealed
   drawPuzzleGrid(
       ctx,
       0,
       0,
       puzzleCanvasSize.value,
       cells,
-      store.getters.drawCell
+      store.getters.drawCell,
+      store.state.isAnswerRevealed
   );
 };
 
-/** Draw each answer in its own small canvas. */
 const drawAllAnswers = () => {
+  // For each answer, draw in its own canvas
   store.getters.answers.forEach((answer, index) => {
     const canvas = document.getElementById(`answerCanvas${index}`);
     if (!canvas) return;
@@ -77,23 +49,86 @@ const drawAllAnswers = () => {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
 
-    // If we want to highlight the correct answer after reveal
-    if (store.state.isAnswerRevealed && index === store.getters.correctAnswerIndex) {
-      ctx.fillStyle = '#ccffcc'; // light-green highlight
-      ctx.fillRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
+    // If puzzle is revealed, highlight correct & selected answers
+    if (store.state.isAnswerRevealed) {
+      // Always highlight the correct answer in a green outline
+      if (index === store.getters.correctAnswerIndex) {
+        ctx.save();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = '#00cc00';
+        ctx.strokeRect(2, 2, answerCanvasSize.value - 4, answerCanvasSize.value - 4);
+        ctx.restore();
+      }
+
+      // Also highlight the user's selection:
+      // - green outline if it's the correct answer
+      // - red outline if it's the wrong one
+      if (index === store.state.selectedAnswerIndex) {
+        ctx.save();
+        ctx.lineWidth = 5;
+        if (store.getters.isAnswerCorrect) {
+          // same as correct
+          ctx.strokeStyle = '#00cc00';
+        } else {
+          // wrong guess
+          ctx.strokeStyle = '#ff0000';
+        }
+        ctx.strokeRect(8, 8, answerCanvasSize.value - 16, answerCanvasSize.value - 16);
+        ctx.restore();
+      }
     }
 
-    // draw the shape for this answer
+    // Now draw the shape for this answer
     store.getters.drawCell(ctx, answer, 0, 0, answerCanvasSize.value);
   });
 };
 
-/** Handle user clicks on an answer. */
+// Handle user clicks on an answer
 const onAnswerClicked = (index) => {
   if (!store.state.isAnswerRevealed) {
     store.commit('selectAnswer', index);
   }
 };
+
+/**
+ * Update puzzleCanvasSize on mount AND on window resize
+ * Then generate puzzle, then watch store changes to redraw.
+ */
+const updateSizes = () => {
+  puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.5);
+  answerCanvasSize.value = Math.round(puzzleCanvasSize.value * 0.2);
+};
+
+onMounted(() => {
+  // Update sizes once at startup
+  updateSizes();
+
+  // Listen for window resize to recalc sizes & re-draw
+  window.addEventListener('resize', () => {
+    updateSizes();
+    drawAll();
+  });
+
+  // Generate puzzle on mount
+  store.commit('generate');
+
+  // Redraw whenever puzzle or reveal state changes
+  watch(
+      () => store.state.cellsAndAnswers,
+      drawAll,
+      { deep: true, immediate: true }
+  );
+  watch(
+      () => store.state.isAnswerRevealed,
+      drawAll,
+      { immediate: true }
+  );
+});
+
+onBeforeUnmount(() => {
+  // Clean up listener to avoid leaks
+  window.removeEventListener('resize', updateSizes);
+});
 </script>
 
 <template>
@@ -123,15 +158,9 @@ const onAnswerClicked = (index) => {
       </div>
     </div>
 
-    <!-- After picking an answer, reveal correctness -->
+    <!-- Once answer is revealed, show Next Puzzle button only. -->
     <div v-if="store.state.isAnswerRevealed" class="mt-4 text-center">
-      <p v-if="store.getters.isAnswerCorrect" class="text-green-600 text-lg">
-        Correct!
-      </p>
-      <p v-else class="text-red-600 text-lg">
-        Wrong!
-      </p>
-      <p>The correct choice is answer #{{ store.getters.correctAnswerIndex + 1 }}</p>
+      <!-- Removed 'Correct!', 'Wrong!', and 'The correct choice is…' lines. -->
       <button class="btn btn-primary mt-4" @click="store.commit('generate')">
         Next Puzzle
       </button>

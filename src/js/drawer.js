@@ -1,6 +1,7 @@
 // cells - 2D array of cell objects
 // drawCell - function that draws a single cell (ctx, cell, x, y, size)
-export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell) => {
+// revealAnswer - boolean: if true, draw the real cell instead of question mark
+export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, revealAnswer=false) => {
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }
@@ -8,34 +9,35 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell)
     ctx.lineWidth = 1;
     ctx.strokeRect(startX, startY, puzzleSize, puzzleSize);
 
-    const cellSize = puzzleSize / 3
+    const cellSize = puzzleSize / 3;
 
     for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
-            const cell = cells[row][col]
-            const cellX = startX + col * cellSize
-            const cellY = startY + row * cellSize
+            const cell = cells[row][col];
+            const cellX = startX + col * cellSize;
+            const cellY = startY + row * cellSize;
 
             // outline the cell
             ctx.strokeStyle = "#00000033";
             ctx.lineWidth = 1;
             ctx.strokeRect(cellX, cellY, cellSize, cellSize);
 
-            ctx.save()
-            if (cell.isAnswer) {
-                drawQuestionMark(ctx, cellX, cellY, cellSize)
+            ctx.save();
+            if (cell.isAnswer && !revealAnswer) {
+                // If not revealed yet, draw a question mark
+                drawQuestionMark(ctx, cellX, cellY, cellSize);
             } else {
-                drawCell(ctx, cell, cellX, cellY, cellSize)
+                // Otherwise, draw the actual cell
+                drawCell(ctx, cell, cellX, cellY, cellSize);
             }
-            ctx.restore()
+            ctx.restore();
         }
     }
-}
+};
 
 const drawQuestionMark = (ctx, x, y, size) => {
-    // Optionally draw a big "?" in the center:
     ctx.font = `${Math.floor(size * 0.6)}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("?", x + size / 2, y + size / 2);
-}
+};
