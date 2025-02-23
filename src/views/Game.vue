@@ -92,6 +92,10 @@ const dividerText = computed(() => {
   }
 });
 
+const dividerClass = computed(() => {
+  return store.state.isAnswerRevealed && store.getters.correctAnswerIndex !== store.state.selectedAnswerIndex ? 'divider-error' : ''
+})
+
 onMounted(() => {
   updateSizes();
 
@@ -134,7 +138,7 @@ onBeforeUnmount(() => {
         class="border border-gray-400"
     />
 
-    <div class="divider text-neutral-500 my-6">{{dividerText}}</div>
+    <div class="divider text-neutral-500 my-6" :class="dividerClass">{{dividerText}}</div>
 
     <div class="grid grid-cols-4 gap-2">
       <div
