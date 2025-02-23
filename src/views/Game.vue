@@ -3,11 +3,6 @@ import { onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
 
-/**
- * We'll have one main canvas for the puzzle,
- * plus multiple small canvases for each answer.
- */
-
 // Main puzzle dimension
 const puzzleCanvasSize = ref(500);
 const puzzleCanvas = ref(null);
@@ -17,8 +12,8 @@ const answerCanvasSize = ref(100);
 
 // Watch the store's puzzle/answers to redraw
 const drawAll = () => {
-  drawPuzzle();
-  drawAllAnswers();
+  setTimeout(() => {drawPuzzle()}, 1);
+  setTimeout(() => {drawAllAnswers()}, 1);
 };
 
 const drawPuzzle = () => {
@@ -90,26 +85,19 @@ const onAnswerClicked = (index) => {
   }
 };
 
-/**
- * Update puzzleCanvasSize on mount AND on window resize
- * Then generate puzzle, then watch store changes to redraw.
- */
 const updateSizes = () => {
   puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.5);
   answerCanvasSize.value = Math.round(puzzleCanvasSize.value * 0.2);
 };
 
 onMounted(() => {
-  // Update sizes once at startup
   updateSizes();
 
-  // Listen for window resize to recalc sizes & re-draw
   window.addEventListener('resize', () => {
     updateSizes();
     drawAll();
   });
 
-  // Generate puzzle on mount
   store.commit('generate');
 
   // Redraw whenever puzzle or reveal state changes
@@ -158,9 +146,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- Once answer is revealed, show Next Puzzle button only. -->
     <div v-if="store.state.isAnswerRevealed" class="mt-4 text-center">
-      <!-- Removed 'Correct!', 'Wrong!', and 'The correct choice is…' lines. -->
       <button class="btn btn-primary mt-4" @click="store.commit('generate')">
         Next Puzzle
       </button>
