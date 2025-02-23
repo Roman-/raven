@@ -31,7 +31,6 @@ export const store = createStore({
         },
         // For clarity, the correct answer is always at index 0 (per generator.js)
         correctAnswerIndex (state) {
-            console.log("state.answers: ", state.cellsAndAnswers.answers);
             return state.cellsAndAnswers.answers.findIndex(a => a.isAnswer);
         },
         // Helper: did the player pick the correct answer?

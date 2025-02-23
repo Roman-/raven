@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, onBeforeUnmount } from 'vue';
+import {onMounted, ref, watch, onBeforeUnmount, computed} from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
 
@@ -49,7 +49,6 @@ const drawAllAnswers = () => {
   });
 };
 
-// Handle user clicks on an answer
 const onAnswerClicked = (index) => {
   if (!store.state.isAnswerRevealed) {
     store.commit('selectAnswer', index);
@@ -62,7 +61,6 @@ const updateSizes = () => {
 };
 
 const answerCanvasClass = (index) => {
-  // No special classes if the puzzle hasn't been revealed yet
   if (!store.state.isAnswerRevealed) {
     return 'border-gray-500 border-dashed';
   }
@@ -80,6 +78,17 @@ const answerCanvasClass = (index) => {
 
   return 'opacity-25 border-gray-300 border-dashed';
 };
+
+const dividerText = computed(() => {
+  if (!store.state.isAnswerRevealed) {
+    return 'which completes the pattern?';
+  }
+  if (store.getters.correctAnswerIndex === store.state.selectedAnswerIndex) {
+    return 'nice!';
+  } else {
+    return 'uh-oh';
+  }
+});
 
 onMounted(() => {
   updateSizes();
@@ -123,7 +132,7 @@ onBeforeUnmount(() => {
         class="border border-gray-400"
     />
 
-    <div class="divider text-neutral-500 my-6">which completes the pattern?</div>
+    <div class="divider text-neutral-500 my-6">{{dividerText}}</div>
 
     <div class="grid grid-cols-4 gap-2">
       <div
