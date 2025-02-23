@@ -10,7 +10,7 @@ export const store = createStore({
         return {
             flavor: shapeFlavor,
             cellsAndAnswers: null,
-            numAnswers: 6,
+            numAnswers: 8,
 
             // New for "interactive" puzzle:
             selectedAnswerIndex: null,

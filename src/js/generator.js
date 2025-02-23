@@ -37,24 +37,61 @@ export const generateCellsAndAnswers = (grids, flavor, numAnswers) => {
     answerCell.isAnswer = true
 
     // Build the answers array. The first one is the correct answer.
-    const answers = [ answerCell ]
-
-    // We create the remaining (numAnswers - 1) "distractors".
-    for (let i = 1; i < numAnswers; i++) {
-        const distractor = {}
-        featureNames.forEach(feature => {
-            const usedVariations = chosenVariationsForFeature[feature]
-            const correctValue = answerCell[feature]
-            // We want to pick a different variation from the correct one if possible.
-            // Because we have exactly 3 active variations, remove the correct one and choose random among the other 2.
-            const variationOptions = usedVariations.filter(v => v !== correctValue)
-            distractor[feature] = randomElement(variationOptions)
-        })
-        answers.push(distractor)
-    }
+    const answers = generateAnswers(numAnswers, answerCell, chosenVariationsForFeature)
 
     return {
         'cells': cells,
         'answers': answers
     }
+}
+
+// chosenVariationsForFeature: { 'color' -> ["blue", "green", "red"] , 'shape' -> ['circle', ...] etc.}
+const generateAnswers = (maxAnswers, answerCell, chosenVariationsForFeature) => {
+    const answers = [answerCell]
+
+    const featureNames = shuffle(Object.keys(chosenVariationsForFeature))
+    let alteredPairs = [] // [[feature1, alteredValue1], [feature2, alteredValue2], ...]
+
+    featureNames.forEach(feature => {
+        const allFeatureValues = chosenVariationsForFeature[feature]
+        const correctFeatureValue = answerCell[feature]
+        const wrongFeatureValues = shuffle(allFeatureValues.filter(v => v !== correctFeatureValue))
+        wrongFeatureValues.forEach(wrongFeatureValue => {
+            alteredPairs.push([feature, wrongFeatureValue])
+        })
+    })
+    // use answerCell as the prototype to generate answers
+    alteredPairs.forEach(pair => {
+        const feature = pair[0]
+        const wrongFeatureValue = pair[1]
+        const newAnswerCell = Object.assign({}, answerCell)
+        newAnswerCell[feature] = wrongFeatureValue
+        answers.push(newAnswerCell)
+    })
+
+    if (answers.length >= maxAnswers || featureNames.length === 1) {
+        answers.splice(maxAnswers, answers.length - maxAnswers);
+        return answers;
+    }
+
+    // add variations that will differ by two features, since featureNames.length > 1
+    const feature0 = featureNames[0]
+    const feature1 = featureNames[1]
+    chosenVariationsForFeature[feature0].filter(v => v !== answerCell[feature0]).forEach(wrongValueOfFeature0 => {
+        chosenVariationsForFeature[feature1].filter(v => v !== answerCell[feature1]).forEach(wrongValueOfFeature1 => {
+            const newAnswerCell = Object.assign({}, answerCell)
+            newAnswerCell[feature0] = wrongValueOfFeature0
+            newAnswerCell[feature1] = wrongValueOfFeature1
+            answers.push(newAnswerCell)
+        })
+    })
+    if (answers.length >= maxAnswers || featureNames.length === 2) {
+        answers.splice(maxAnswers, answers.length - maxAnswers);
+        return answers;
+    }
+
+    console.error("Out of answer variations: generated " + answers.length + " answers, but max is " + maxAnswers)
+
+    return answers
+
 }
