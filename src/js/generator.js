@@ -47,7 +47,12 @@ export const generateCellsAndAnswers = (grids, flavor, numAnswers) => {
 
 // chosenVariationsForFeature: { 'color' -> ["blue", "green", "red"] , 'shape' -> ['circle', ...] etc.}
 const generateAnswers = (maxAnswers, answerCell, chosenVariationsForFeature) => {
-    const answers = [answerCell]
+    let answers = [answerCell]
+    const prototypeAnswer = () => {
+        let result = Object.assign({}, answerCell)
+        result.isAnswer = false
+        return result
+    }
 
     const featureNames = shuffle(Object.keys(chosenVariationsForFeature))
     let alteredPairs = [] // [[feature1, alteredValue1], [feature2, alteredValue2], ...]
@@ -64,14 +69,13 @@ const generateAnswers = (maxAnswers, answerCell, chosenVariationsForFeature) => 
     alteredPairs.forEach(pair => {
         const feature = pair[0]
         const wrongFeatureValue = pair[1]
-        const newAnswerCell = Object.assign({}, answerCell)
+        const newAnswerCell = prototypeAnswer()
         newAnswerCell[feature] = wrongFeatureValue
         answers.push(newAnswerCell)
     })
 
     if (answers.length >= maxAnswers || featureNames.length === 1) {
-        answers.splice(maxAnswers, answers.length - maxAnswers);
-        return answers;
+        return shuffle(answers.splice(0, maxAnswers))
     }
 
     // add variations that will differ by two features, since featureNames.length > 1
@@ -79,19 +83,17 @@ const generateAnswers = (maxAnswers, answerCell, chosenVariationsForFeature) => 
     const feature1 = featureNames[1]
     chosenVariationsForFeature[feature0].filter(v => v !== answerCell[feature0]).forEach(wrongValueOfFeature0 => {
         chosenVariationsForFeature[feature1].filter(v => v !== answerCell[feature1]).forEach(wrongValueOfFeature1 => {
-            const newAnswerCell = Object.assign({}, answerCell)
+            const newAnswerCell = prototypeAnswer()
             newAnswerCell[feature0] = wrongValueOfFeature0
             newAnswerCell[feature1] = wrongValueOfFeature1
             answers.push(newAnswerCell)
         })
     })
     if (answers.length >= maxAnswers || featureNames.length === 2) {
-        answers.splice(maxAnswers, answers.length - maxAnswers);
-        return answers;
+        return shuffle(answers.splice(0, maxAnswers))
     }
 
     console.error("Out of answer variations: generated " + answers.length + " answers, but max is " + maxAnswers)
 
-    return answers
-
+    return shuffle(answers)
 }

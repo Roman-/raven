@@ -30,8 +30,9 @@ export const store = createStore({
             return state.flavor.drawCell
         },
         // For clarity, the correct answer is always at index 0 (per generator.js)
-        correctAnswerIndex () {
-            return 0;
+        correctAnswerIndex (state) {
+            console.log("state.answers: ", state.cellsAndAnswers.answers);
+            return state.cellsAndAnswers.answers.findIndex(a => a.isAnswer);
         },
         // Helper: did the player pick the correct answer?
         isAnswerCorrect (state, getters) {
