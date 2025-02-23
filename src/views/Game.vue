@@ -12,8 +12,8 @@ const answerCanvasSize = ref(100);
 
 // Watch the store's puzzle/answers to redraw
 const drawAll = () => {
-  setTimeout(() => {drawPuzzle()}, 1);
-  setTimeout(() => {drawAllAnswers()}, 1);
+  drawPuzzle()
+  drawAllAnswers()
 };
 
 const drawPuzzle = () => {
@@ -102,6 +102,9 @@ onMounted(() => {
       drawAll,
       { immediate: true }
   );
+
+  // Draw on canvas on init (bug)
+  setTimeout(drawAll, 1);
 });
 
 onBeforeUnmount(() => {
