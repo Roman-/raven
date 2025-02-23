@@ -31,7 +31,7 @@ const drawPuzzle = () => {
       puzzleCanvasSize.value,
       cells,
       store.getters.drawCell,
-      store.state.isAnswerRevealed
+      store.state.isAnswerRevealed ? 'r' : 'q'
   );
 };
 
@@ -64,21 +64,21 @@ const updateSizes = () => {
 const answerCanvasClass = (index) => {
   // No special classes if the puzzle hasn't been revealed yet
   if (!store.state.isAnswerRevealed) {
-    return 'outline-gray-300 border-dashed';
+    return 'border-gray-500 border-dashed';
   }
 
   const correctIndex = store.getters.correctAnswerIndex;
   const selectedIndex = store.state.selectedAnswerIndex;
 
   if (index === correctIndex) {
-    return 'outline outline-green-500 outline-2 border border-gray-300';
+    return 'outline outline-green-500 outline-2 border-transparent';
   }
 
   if (index === selectedIndex && selectedIndex !== correctIndex) {
-    return 'outline outline-red-500 outline-2 border border-gray-300';
+    return 'outline outline-red-500 outline-2 border-transparent';
   }
 
-  return 'opacity-25 border border-gray-300 border-dashed';
+  return 'opacity-25 border-gray-300 border-dashed';
 };
 
 onMounted(() => {
@@ -121,10 +121,11 @@ onBeforeUnmount(() => {
         :width="puzzleCanvasSize"
         :height="puzzleCanvasSize"
         class="border border-gray-400"
-    ></canvas>
+    />
 
-    <!-- Answers Row -->
-    <div class="grid grid-cols-4 gap-2 mt-6">
+    <div class="divider text-neutral-500 my-6">which completes the pattern?</div>
+
+    <div class="grid grid-cols-4 gap-2">
       <div
           v-for="(answer, index) in store.getters.answers"
           :key="index"

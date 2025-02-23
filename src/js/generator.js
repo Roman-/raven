@@ -48,11 +48,7 @@ export const generateCellsAndAnswers = (grids, flavor, numAnswers) => {
 // chosenVariationsForFeature: { 'color' -> ["blue", "green", "red"] , 'shape' -> ['circle', ...] etc.}
 const generateAnswers = (maxAnswers, answerCell, chosenVariationsForFeature) => {
     let answers = [answerCell]
-    const prototypeAnswer = () => {
-        let result = Object.assign({}, answerCell)
-        result.isAnswer = false
-        return result
-    }
+    const prototypeAnswer = () => ({ ...answerCell, isAnswer: false });
 
     const featureNames = shuffle(Object.keys(chosenVariationsForFeature))
     let alteredPairs = [] // [[feature1, alteredValue1], [feature2, alteredValue2], ...]

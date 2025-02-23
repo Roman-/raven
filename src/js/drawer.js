@@ -1,7 +1,8 @@
 // cells - 2D array of cell objects
 // drawCell - function that draws a single cell (ctx, cell, x, y, size)
 // revealAnswer - boolean: if true, draw the real cell instead of question mark
-export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, revealAnswer=false) => {
+// answerStyle: 'q' for question mark, 'n' for normal, 'r' for revealed (outlined)
+export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, answerStyle) => {
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }
@@ -23,12 +24,16 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
             ctx.strokeRect(cellX, cellY, cellSize, cellSize);
 
             ctx.save();
-            if (cell.isAnswer && !revealAnswer) {
-                // If not revealed yet, draw a question mark
+            if (cell.isAnswer && answerStyle === 'q') {
                 drawQuestionMark(ctx, cellX, cellY, cellSize);
             } else {
-                // Otherwise, draw the actual cell
                 drawCell(ctx, cell, cellX, cellY, cellSize);
+            }
+            if (cell.isAnswer && answerStyle === 'r') {
+                // outline a cell
+                ctx.strokeStyle = "#00990033";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(cellX, cellY, cellSize, cellSize);
             }
             ctx.restore();
         }
