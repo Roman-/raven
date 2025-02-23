@@ -57,8 +57,8 @@ const onAnswerClicked = (index) => {
 };
 
 const updateSizes = () => {
-  puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.5);
-  answerCanvasSize.value = Math.round(puzzleCanvasSize.value * 0.2);
+  puzzleCanvasSize.value = Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.7);
+  answerCanvasSize.value = Math.round(puzzleCanvasSize.value * 0.3);
 };
 
 const answerCanvasClass = (index) => {
@@ -121,6 +121,13 @@ onBeforeUnmount(() => {
   // Clean up listener to avoid leaks
   window.removeEventListener('resize', updateSizes);
 });
+
+const onPuzzleBoardClicked = () => {
+  if (store.state.isAnswerRevealed) {
+    store.commit('generate');
+  }
+}
+
 </script>
 
 <template>
@@ -131,6 +138,8 @@ onBeforeUnmount(() => {
         :width="puzzleCanvasSize"
         :height="puzzleCanvasSize"
         class="border border-gray-400"
+        @click="onPuzzleBoardClicked"
+        :style="{cursor: store.state.isAnswerRevealed ? 'pointer' : 'default'}"
     />
 
     <div class="divider text-neutral-500 my-6">{{dividerText}}</div>
@@ -151,10 +160,8 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div v-if="store.state.isAnswerRevealed" class="mt-4 text-center">
-      <button class="btn btn-primary mt-4" @click="store.commit('generate')">
-        Next Puzzle
-      </button>
+    <div v-if="store.state.isAnswerRevealed" class="mt-4 text-center text-neutral-500">
+      (click the puzzle grid to start over)
     </div>
   </div>
 </template>
