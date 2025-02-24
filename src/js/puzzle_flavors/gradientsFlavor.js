@@ -14,10 +14,10 @@ export const gradientsFlavor = {
     drawCell: (ctx, cell, x, y, size) => {
         // draw a square colored with cell[palette] gradient in the cell[direction]
         const dir = {
-            'right': [0, 0, size, 0],
-            'down':  [0, 0, 0, size],
-            'diag1': [0, 0, size, size],
-            'diag2': [0, size, size, 0],
+            'right': [x, y, x + size, y],
+            'down':  [x, y, x, y + size],
+            'diag1': [x, y, x + size, y + size],
+            'diag2': [x + size, y, x, y + size],
         }
         const gradient = ctx.createLinearGradient(...dir[cell.direction]);
         for (let i = 0; i < cell.palette.length; i++) {

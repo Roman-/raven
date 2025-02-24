@@ -160,8 +160,8 @@ const onPuzzleBoardClicked = () => {
       </div>
     </div>
 
-    <div v-if="store.state.isAnswerRevealed" class="mt-4 text-center text-neutral-500">
-      (click the puzzle grid to start over)
+    <div v-if="store.state.isAnswerRevealed" class="flex flex-col items-center mt-4 text-center text-neutral-500">
+      <button class="btn btn-primary btn-lg" @click="store.commit('generate')">Next Puzzle</button>
     </div>
   </div>
 </template>
