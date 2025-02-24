@@ -4,12 +4,13 @@ import { shapeFlavor } from "@/js/puzzle_flavors/shapeFlavor";
 import { gradientsFlavor } from "@/js/puzzle_flavors/gradientsFlavor";
 import { generateCellsAndAnswers } from "@/js/generator";
 import { generateSetOfGridsMaximumDifficulty } from "@/js/grids";
+import {fancyShapeFlavor} from "@/js/puzzle_flavors/fancyShapeFlavor";
 
 export const store = createStore({
     strict: true,
     state () {
         return {
-            flavor: shapeFlavor,
+            flavor: fancyShapeFlavor,
             cellsAndAnswers: null,
             numAnswers: 8,
 
