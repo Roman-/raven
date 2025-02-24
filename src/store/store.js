@@ -1,6 +1,7 @@
 // filename: src/store/store.js
 import { createStore } from 'vuex'
 import { shapeFlavor } from "@/js/puzzle_flavors/shapeFlavor";
+import { gradientsFlavor } from "@/js/puzzle_flavors/gradientsFlavor";
 import { generateCellsAndAnswers } from "@/js/generator";
 import { generateSetOfGridsMaximumDifficulty } from "@/js/grids";
 

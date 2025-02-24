@@ -1,3 +1,5 @@
+import {randomElement} from "@/js/helpers";
+
 function drawShape(ctx, shape, x, y, size) {
     switch (shape) {
         case 'circle': return drawCirclePath(ctx, x, y, size)
@@ -49,13 +51,24 @@ function drawPentagonPath(ctx, x, y, size) {
     ctx.closePath()
 }
 
+const getRandomPaletteForShapes = () => {
+    return randomElement([
+        ["#393E46", "#00ADB5", "#EEEEEE"],
+        ["#FFC7C7", "#F6F6F6", "#8785A2"],
+        ["#F38181", "#FCE38A", "#95E1D3"],
+        ["#A8D8EA", "#AA96DA", "#FCBAD3"],
+        ["#3FC1C9", "#F5F5F5", "#FC5185"],
+        ["#E84545", "#903749", "#53354A"]
+    ]);
+}
+
 export const shapeFlavor = {
     name: 'Shapes',
     description: 'Simple colored shapes (circle, triangle etc.)',
     getFeaturesVariations: () => {
         return {
             'shape': ['circle', 'triangle', 'square', 'pentagon'],
-            'color': ['#FFD23F', '#337357', '#EE4266'],
+            'color': getRandomPaletteForShapes(),
         }
     },
     drawCell: (ctx, cell, x, y, size) => {
