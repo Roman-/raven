@@ -46,13 +46,8 @@ function generatePuzzle() {
 }
 
 const drawGradient = (ctx, x, y, w, h, palettes) => {
-  // 1) Pick a random palette from the list of palettes
   const chosenPalette = randomElement(palettes);
-  // 2) Define your fixed stops (based on your description)
-  const stops = [0, 0.3, 0.8, 1];
 
-  // 3) Possible gradient directions
-  //    You used "size" in your snippet, but presumably you want w/h for widths/heights
   const directions = {
     right: [x,     y,     x + w, y     ],
     down:  [x,     y,     x,     y + h ],
@@ -60,21 +55,16 @@ const drawGradient = (ctx, x, y, w, h, palettes) => {
     diag2: [x + w, y,     x,     y + h ],
   };
 
-  // Choose a direction at random
   let [x1, y1, x2, y2] = randomElement(Object.values(directions));
 
-  // (Optional) Randomly invert the direction
-  // 50% chance to swap start/end
   if (Math.random() < 0.5) {
     [x1, y1, x2, y2] = [x2, y2, x1, y1];
   }
 
-  // Create the gradient
   const grd = ctx.createLinearGradient(x1, y1, x2, y2);
 
-  // Add color stops from the chosen palette and the fixed stops
   chosenPalette.forEach((color, index) => {
-    grd.addColorStop(stops[index], color);
+    grd.addColorStop(index / (chosenPalette.length - 1), color);
   });
 
   // Set fill style and draw
@@ -93,13 +83,26 @@ function drawWallpaper() {
   if (!canvas || !puzzleData.value) return
   const ctx = canvas.getContext('2d')
 
-  const palettes = [["#180161", "#4F1787", "#EB3678", "#FB773C"]]
+  const palettes = [
+    ["#1A1A1D", "#3B1C32", "#6A1E55"],
+    ["#09122C", "#872341", "#BE3144"],
+    ["#1A3636", "#40534C", "#677D6A"],
+    ["#1B262C", "#0F4C75", "#3282B8"],
+    ["#17153B", "#2E236C", "#433D8B"]
+  ]
   drawGradient(ctx, 0, 0, canvas.width, canvas.height, palettes)
 
   // Puzzle in the center: 3x3 grid
   const puzzleSize = canvas.height * 0.7
   const puzzleX = (canvas.width - puzzleSize) / 2
   const puzzleY = (canvas.height - puzzleSize) * 0.3
+
+  // fill square under the puzzle
+  ctx.fillStyle = '#ffffff45'
+  const margin = puzzleSize * 0.02
+  ctx.fillRect(puzzleX - margin, puzzleY - margin, puzzleSize + margin * 2, puzzleSize + margin * 2)
+
+
   drawPuzzleGrid(
       ctx,
       puzzleX,
