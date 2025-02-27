@@ -51,7 +51,9 @@ const drawAllAnswers = () => {
 };
 
 const onAnswerClicked = (index) => {
-  if (!store.state.isAnswerRevealed) {
+  if (store.state.isAnswerRevealed && store.getters.correctAnswerIndex === index) {
+    store.commit('generate');
+  } else {
     store.commit('selectAnswer', index);
   }
 };
