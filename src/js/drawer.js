@@ -41,6 +41,7 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
 };
 
 const drawQuestionMark = (ctx, x, y, size) => {
+    ctx.fillStyle = "#aaaaaa";
     ctx.font = `${Math.floor(size * 0.6)}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
