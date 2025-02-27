@@ -2,11 +2,11 @@
 // drawCell - function that draws a single cell (ctx, cell, x, y, size)
 // revealAnswer - boolean: if true, draw the real cell instead of question mark
 // answerStyle: 'q' for question mark, 'n' for normal, 'r' for revealed (outlined)
-export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, answerStyle) => {
+export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, answerStyle, strokeShade = "000000") => {
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }
-    ctx.strokeStyle = "#00000055";
+    ctx.strokeStyle = `#${strokeShade}55`;
     ctx.lineWidth = 1;
     ctx.strokeRect(startX, startY, puzzleSize, puzzleSize);
 
@@ -19,7 +19,7 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
             const cellY = startY + row * cellSize;
 
             // outline the cell
-            ctx.strokeStyle = "#00000033";
+            ctx.strokeStyle = `#${strokeShade}33`
             ctx.lineWidth = 1;
             ctx.strokeRect(cellX, cellY, cellSize, cellSize);
 
@@ -32,7 +32,7 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
             ctx.restore();
             if (cell.isAnswer && answerStyle === 'r') {
                 const margin = 1
-                ctx.strokeStyle = "#000000";
+                ctx.strokeStyle = `#${strokeShade}`
                 ctx.lineWidth = margin
                 ctx.strokeRect(cellX + margin, cellY + margin, cellSize - margin * 2, cellSize - margin * 2);
             }

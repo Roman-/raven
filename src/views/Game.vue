@@ -32,7 +32,8 @@ const drawPuzzle = () => {
       puzzleCanvasSize.value,
       cells,
       store.getters.drawCell,
-      store.state.isAnswerRevealed ? 'r' : 'q'
+      store.state.isAnswerRevealed ? 'r' : 'q',
+
   );
 };
 

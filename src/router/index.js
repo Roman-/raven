@@ -1,7 +1,9 @@
+// filename: src/router/index.js
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from "@/views/Home.vue";
 import Game from "@/views/Game.vue";
 import FlavorDesign from "@/views/FlavorDesign.vue";
+import Wallpaper from "@/views/Wallpaper.vue";
 
 const routes = [
   {
@@ -18,6 +20,11 @@ const routes = [
     path: '/designer',
     name: 'designer',
     component: FlavorDesign
+  },
+  {
+    path: '/wallpaper',
+    name: 'wallpaper',
+    component: Wallpaper
   }
 ]
 
