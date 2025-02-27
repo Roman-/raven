@@ -62,6 +62,9 @@ export const store = createStore({
             // If we only allow one guess, just set once
             state.selectedAnswerIndex = index;
             state.isAnswerRevealed = true;
+        },
+        setDifficulty (state, difficulty) {
+            state.difficulty = difficulty;
         }
     },
     actions: {
