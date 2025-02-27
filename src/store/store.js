@@ -10,7 +10,7 @@ export const store = createStore({
     strict: true,
     state () {
         return {
-            flavor: fancyShapeFlavor,
+            flavor: shapeFlavor,
             cellsAndAnswers: null,
             numAnswers: 8,
 

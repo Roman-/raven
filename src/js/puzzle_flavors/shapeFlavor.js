@@ -1,53 +1,20 @@
 import {randomElement} from "@/js/helpers";
+import {drawCirclePath, drawRegularPolygonPath, drawSquarePath} from "@/js/draw/drawingCommon";
 
 function drawShape(ctx, shape, x, y, size) {
     switch (shape) {
         case 'circle': return drawCirclePath(ctx, x, y, size)
-        case 'triangle':  return drawTrianglePath(ctx, x, y, size)
+        case 'triangle':  return drawIsoscelestrianglePath(ctx, x, y, size)
         case 'square': return drawSquarePath(ctx, x, y, size)
-        case 'pentagon': return drawPentagonPath(ctx, x, y, size)
+        case 'pentagon': return drawRegularPolygonPath(ctx, x, y, size, 5, -Math.PI / 2)
         default: console.error("drawShape: Unsupported shape", shape)
     }
 }
 
-function drawCirclePath(ctx, x, y, size) {
-    const centerX = x + size / 2
-    const centerY = y + size / 2
-    const radius = size / 3
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
-}
-
-function drawTrianglePath(ctx, x, y, size) {
+function drawIsoscelestrianglePath(ctx, x, y, size) {
     ctx.moveTo(x + size / 2, y + size / 6)            // top vertex
     ctx.lineTo(x + size / 6, y + (5 * size) / 6)      // bottom-left
     ctx.lineTo(x + (5 * size) / 6, y + (5 * size) / 6)// bottom-right
-    ctx.closePath()
-}
-
-function drawSquarePath(ctx, x, y, size) {
-    // Just an inset square for aesthetic
-    const margin = size / 6
-    ctx.rect(x + margin, y + margin, size - 2 * margin, size - 2 * margin)
-}
-
-function drawPentagonPath(ctx, x, y, size) {
-    // Basic approach: 5 points around a circle
-    const centerX = x + size / 2
-    const centerY = y + size / 2
-    const radius = size / 3
-    const sides = 5
-    const angleStep = (2 * Math.PI) / sides
-    ctx.moveTo(
-        centerX + radius * Math.cos(0),
-        centerY + radius * Math.sin(0)
-    )
-    for (let i = 1; i < sides; i++) {
-        const angle = i * angleStep
-        ctx.lineTo(
-            centerX + radius * Math.cos(angle),
-            centerY + radius * Math.sin(angle)
-        )
-    }
     ctx.closePath()
 }
 
@@ -58,7 +25,6 @@ const getRandomPaletteForShapes = () => {
         ["#F38181", "#FCE38A", "#95E1D3"],
         ["#A8D8EA", "#AA96DA", "#FCBAD3"],
         ["#3FC1C9", "#F5F5F5", "#FC5185"],
-        ["#E84545", "#903749", "#53354A"]
     ]);
 }
 
