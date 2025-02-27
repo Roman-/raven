@@ -6,7 +6,7 @@
 
     <div class="mt-2 flex gap-2">
       <button class="btn btn-primary" @click="generatePuzzle">re-generate</button>
-      <button class="btn btn-secondary" @click="downloadJpg">download</button>
+      <button class="btn btn-secondary" @click="downloadPng">download</button>
       <button class="btn btn-accent" @click="downloadTen">download 10</button>
     </div>
   </div>
@@ -20,10 +20,10 @@ import { shapeFlavor } from '@/js/puzzle_flavors/shapeFlavor.js'
 import {generateCellsAndAnswers } from '@/js/generator.js'
 import { drawPuzzleGrid } from '@/js/drawer.js'
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
-import {randomElement} from "@/js/helpers";
+import {downloadCanvasAsPNG, randomElement} from "@/js/helpers";
 
-// Helper to download canvas as JPG
-function downloadCanvasAsJpg(canvas, filename = "wallpaper.jpg") {
+// Helper to download canvas as Png
+function downloadCanvasAsPng(canvas, filename = "wallpaper.png") {
   const link = document.createElement("a")
   link.download = filename
   // Use image/jpeg with some quality factor (0.9 or 0.95)
@@ -143,8 +143,8 @@ function drawAnswersRow(ctx, answers) {
   }
 }
 
-function downloadJpg() {
-  downloadCanvasAsJpg(canvasRef.value, "wallpaper.jpg")
+function downloadPng() {
+  downloadCanvasAsPNG(canvasRef.value, "wallpaper.png")
 }
 
 /**
@@ -156,7 +156,7 @@ function downloadTen() {
 
   for (let i = 1; i <= 10; i++) {
     generatePuzzle()
-    downloadCanvasAsJpg(canvasRef.value, `wallpaper_${i}.jpg`)
+    downloadCanvasAsPNG(canvasRef.value, `wallpaper_${i}.png`)
   }
 
   // Restore the old puzzle and re-draw
