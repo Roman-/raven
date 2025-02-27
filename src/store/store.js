@@ -1,16 +1,14 @@
-// filename: src/store/store.js
 import { createStore } from 'vuex'
-import { shapeFlavor } from "@/js/puzzle_flavors/shapeFlavor";
-import { gradientsFlavor } from "@/js/puzzle_flavors/gradientsFlavor";
 import { generateCellsAndAnswers } from "@/js/generator";
 import { generateSetOfGridsMaximumDifficulty } from "@/js/grids";
-import {fancyShapeFlavor} from "@/js/puzzle_flavors/fancyShapeFlavor";
+import {getRandomFlavor} from "@/js/FlavorFactory";
 
 export const store = createStore({
     strict: true,
     state () {
         return {
-            flavor: shapeFlavor,
+            difficulty: 1,
+            flavor: getRandomFlavor(1),
             cellsAndAnswers: null,
             numAnswers: 8,
 
@@ -44,6 +42,7 @@ export const store = createStore({
     mutations: {
         // Generate a new puzzle
         generate (state) {
+            state.flavor = getRandomFlavor(state.difficulty)
             const numFeatures = Object.keys(state.flavor.getFeaturesVariations()).length;
             const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
 

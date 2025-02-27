@@ -3,9 +3,9 @@ import {onMounted, ref, watch} from 'vue';
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
 import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
-import {gradientsFlavor} from "@/js/puzzle_flavors/gradientsFlavor";
+import {squareGradientsFlavor} from "@/js/puzzle_flavors/squareGradientsFlavor";
 
-const flavor = gradientsFlavor; // change to the flavor you're working with
+const flavor = squareGradientsFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 

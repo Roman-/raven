@@ -22,7 +22,7 @@ const getRandomPaletteForShapes = () => {
     ]);
 }
 
-export const fancyShapeFlavor = {
+export const multiShapeFlavor = {
     name: 'Fancy Shapes',
     description: 'Shapes in multiple amounts',
     getFeaturesVariations: () => {
@@ -50,4 +50,3 @@ export const fancyShapeFlavor = {
         }
     }
 }
-

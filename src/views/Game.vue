@@ -33,7 +33,6 @@ const drawPuzzle = () => {
       cells,
       store.getters.drawCell,
       store.state.isAnswerRevealed ? 'r' : 'q',
-
   );
 };
 

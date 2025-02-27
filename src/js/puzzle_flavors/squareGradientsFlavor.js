@@ -1,4 +1,4 @@
-export const gradientsFlavor = {
+export const squareGradientsFlavor = {
     name: 'Gradients',
     description: 'Direction and colorset',
     getFeaturesVariations: () => {
@@ -27,4 +27,3 @@ export const gradientsFlavor = {
         ctx.fillRect(x, y, size, size);
     }
 }
-

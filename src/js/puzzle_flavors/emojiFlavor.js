@@ -10,9 +10,6 @@ export const emojiCategories = [
     ["🦋", "🐌", "🐛", "🐜", "🐝", "🐞", "🕷️", "🕸️", "🦂"],
 ];
 
-export const fgAnimalsEmojis = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮", "🐷", "🐸", "🐵"]
-export const bgNatureEmojis = ["🌲","🌊","☁️","🔥","🏔️","🌅","🌄","🏜️","🌋","🌪️","🌈","🌙","🌟","☀️","🌻","⛰️","🏞️","🏠","🚗","🏕️","🏢","🎆","🎇","🌃","🏙️","🌁"]
-
 export const emojiFlavor = {
     name: 'Emojis',
     description: 'Emojis!',
@@ -29,4 +26,3 @@ export const emojiFlavor = {
         ctx.fillText(cell.emoji, x + size / 2, y + size / 2);
     }
 }
-
