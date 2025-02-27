@@ -20,6 +20,7 @@ import { shapeFlavor } from '@/js/puzzle_flavors/shapeFlavor.js'
 import {generateCellsAndAnswers } from '@/js/generator.js'
 import { drawPuzzleGrid } from '@/js/drawer.js'
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
+import {randomElement} from "@/js/helpers";
 
 // Helper to download canvas as JPG
 function downloadCanvasAsJpg(canvas, filename = "wallpaper.jpg") {
@@ -44,17 +45,42 @@ function generatePuzzle() {
   drawWallpaper()
 }
 
-const drawGradient = (ctx, w, h) => {
-  const grd = ctx.createLinearGradient(0, 0, w, h)
-  const colors = ["#1A1A1D", "#3B1C32", "#6A1E55", "#A64D79"];
-  const stops = [0, 0.3, 0.8, 1]
+const drawGradient = (ctx, x, y, w, h, palettes) => {
+  // 1) Pick a random palette from the list of palettes
+  const chosenPalette = randomElement(palettes);
+  // 2) Define your fixed stops (based on your description)
+  const stops = [0, 0.3, 0.8, 1];
 
-  colors.forEach((color, index) => {
+  // 3) Possible gradient directions
+  //    You used "size" in your snippet, but presumably you want w/h for widths/heights
+  const directions = {
+    right: [x,     y,     x + w, y     ],
+    down:  [x,     y,     x,     y + h ],
+    diag1: [x,     y,     x + w, y + h ],
+    diag2: [x + w, y,     x,     y + h ],
+  };
+
+  // Choose a direction at random
+  let [x1, y1, x2, y2] = randomElement(Object.values(directions));
+
+  // (Optional) Randomly invert the direction
+  // 50% chance to swap start/end
+  if (Math.random() < 0.5) {
+    [x1, y1, x2, y2] = [x2, y2, x1, y1];
+  }
+
+  // Create the gradient
+  const grd = ctx.createLinearGradient(x1, y1, x2, y2);
+
+  // Add color stops from the chosen palette and the fixed stops
+  chosenPalette.forEach((color, index) => {
     grd.addColorStop(stops[index], color);
   });
-  ctx.fillStyle = grd
-  ctx.fillRect(0, 0, w, h)
-}
+
+  // Set fill style and draw
+  ctx.fillStyle = grd;
+  ctx.fillRect(x, y, w, h);
+};
 
 /**
  * Draw everything onto the 1920x1080 canvas:
@@ -67,7 +93,8 @@ function drawWallpaper() {
   if (!canvas || !puzzleData.value) return
   const ctx = canvas.getContext('2d')
 
-  drawGradient(ctx, canvas.width, canvas.height)
+  const palettes = [["#180161", "#4F1787", "#EB3678", "#FB773C"]]
+  drawGradient(ctx, 0, 0, canvas.width, canvas.height, palettes)
 
   // Puzzle in the center: 3x3 grid
   const puzzleSize = canvas.height * 0.7
