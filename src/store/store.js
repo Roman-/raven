@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { generateCellsAndAnswers } from "@/js/generator";
-import { generateSetOfGridsMaximumDifficulty } from "@/js/grids";
+import {generateSetOfGrids, generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {getRandomFlavor} from "@/js/FlavorFactory";
 
 export const store = createStore({
@@ -44,7 +44,7 @@ export const store = createStore({
         generate (state) {
             state.flavor = getRandomFlavor(state.difficulty)
             const numFeatures = Object.keys(state.flavor.getFeaturesVariations()).length;
-            const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
+            const grids = generateSetOfGrids(numFeatures, state.difficulty);
 
             // Build puzzle + answers
             state.cellsAndAnswers = generateCellsAndAnswers(
