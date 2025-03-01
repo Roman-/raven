@@ -5,7 +5,6 @@ export const squareGradientsFlavor = {
         return {
             'direction': ['right', 'down', 'diag1', 'diag2'],
             'palette': [[ "#FCC737", "#F26B0F", "#E73879", "#7E1891" ],
-                        [ "#B7B1F2", "#FDB7EA", "#FFDCCC", "#FBF3B9" ],
                         [ "#C96868", "#FADFA1", "#FFF4EA", "#7EACB5" ],
                         [ "#59D5E0", "#F5DD61", "#FAA300", "#F4538A" ],
                         [ "#FF0000", "#FFA27F", "#FFE8C5", "#97BE5A" ]]

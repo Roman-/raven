@@ -2,11 +2,9 @@
 import {onMounted, ref, watch} from 'vue';
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
-import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
-import {squareGradientsFlavor} from "@/js/puzzle_flavors/squareGradientsFlavor";
-import {emojiFlavor} from "@/js/puzzle_flavors/emojiFlavor";
+import {colorWheelFlavor} from "@/js/puzzle_flavors/colorWheelFlavor";
 
-const flavor = emojiFlavor; // change to the flavor you're working with
+const flavor = colorWheelFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 
