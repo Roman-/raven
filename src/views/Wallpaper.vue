@@ -21,6 +21,7 @@ import {generateCellsAndAnswers } from '@/js/generator.js'
 import { drawPuzzleGrid } from '@/js/drawer.js'
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {downloadCanvasAsPNG, randomElement} from "@/js/helpers";
+import {drawRandomLinearGradient} from "@/js/draw/drawingCommon";
 
 // Helper to download canvas as Png
 function downloadCanvasAsPng(canvas, filename = "wallpaper.png") {
@@ -45,33 +46,6 @@ function generatePuzzle() {
   drawWallpaper()
 }
 
-const drawGradient = (ctx, x, y, w, h, palettes) => {
-  const chosenPalette = randomElement(palettes);
-
-  const directions = {
-    right: [x,     y,     x + w, y     ],
-    down:  [x,     y,     x,     y + h ],
-    diag1: [x,     y,     x + w, y + h ],
-    diag2: [x + w, y,     x,     y + h ],
-  };
-
-  let [x1, y1, x2, y2] = randomElement(Object.values(directions));
-
-  if (Math.random() < 0.5) {
-    [x1, y1, x2, y2] = [x2, y2, x1, y1];
-  }
-
-  const grd = ctx.createLinearGradient(x1, y1, x2, y2);
-
-  chosenPalette.forEach((color, index) => {
-    grd.addColorStop(index / (chosenPalette.length - 1), color);
-  });
-
-  // Set fill style and draw
-  ctx.fillStyle = grd;
-  ctx.fillRect(x, y, w, h);
-};
-
 /**
  * Draw everything onto the 1920x1080 canvas:
  * - Dark gradient background
@@ -90,7 +64,8 @@ function drawWallpaper() {
     ["#1B262C", "#0F4C75", "#3282B8"],
     ["#17153B", "#2E236C", "#433D8B"]
   ]
-  drawGradient(ctx, 0, 0, canvas.width, canvas.height, palettes)
+  const chosenPalette = randomElement(palettes);
+  drawRandomLinearGradient(ctx, 0, 0, canvas.width, canvas.height, chosenPalette)
 
   // Puzzle in the center: 3x3 grid
   const puzzleSize = canvas.height * 0.7

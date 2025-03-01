@@ -1,3 +1,5 @@
+import {drawRandomLinearGradient} from "@/js/draw/drawingCommon";
+
 export const squareGradientsFlavor = {
     name: 'Gradients',
     description: 'Direction and colorset',
@@ -12,18 +14,6 @@ export const squareGradientsFlavor = {
             ]}
     },
     drawCell: (ctx, cell, size) => {
-        // draw a square colored with cell[palette] gradient in the cell[direction]
-        const dir = {
-            'right': [0, 0, 0 + size, 0],
-            'down':  [0, 0, 0, 0 + size],
-            'diag1': [0, 0, 0 + size, 0 + size],
-            'diag2': [0 + size, 0, 0, 0 + size],
-        }
-        const gradient = ctx.createLinearGradient(...dir[cell.direction]);
-        for (let i = 0; i < cell.palette.length; i++) {
-            gradient.addColorStop(i / cell.palette.length, cell.palette[i]);
-        }
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, size, size);
+        drawRandomLinearGradient(ctx, 0, 0, size, size, cell.palette)
     }
 }
