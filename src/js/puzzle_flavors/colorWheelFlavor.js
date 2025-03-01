@@ -4,7 +4,7 @@ export const colorWheelFlavor = {
     getFeaturesVariations: () => {
         return {
             'thickness': [0.15, 0.3, 0.5],
-            'slices': [8, 18, 40],
+            'slices': [8, 20, 50],
             'hueShift': [0, 90, 180, 270],
         }
     },

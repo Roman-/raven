@@ -7,7 +7,7 @@ export const store = createStore({
     strict: true,
     state () {
         return {
-            difficulty: 1,
+            difficulty: 2,
             flavor: getRandomFlavor(1),
             cellsAndAnswers: null,
             numAnswers: 8,
