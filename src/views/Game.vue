@@ -3,6 +3,7 @@ import {onMounted, ref, watch, onBeforeUnmount, computed} from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
 import {randomElement} from "@/js/helpers";
+import 'animate.css';
 
 // Main puzzle dimension
 const puzzleCanvasSize = ref(500);
@@ -37,7 +38,15 @@ const drawPuzzle = () => {
 };
 
 const drawAllAnswers = () => {
-  // For each answer, draw in its own canvas
+  // For each answer, draw in its own canvas. Canvases may not appear in the DOM yet, so check that first.
+  for (let i = 0; i < store.getters.answers.length; i++) {
+    if (!document.getElementById(`answerCanvas${i}`)) {
+      console.log("set timeout to draw all answers");
+      setTimeout(drawAllAnswers, 1);
+      return;
+    }
+  }
+
   store.getters.answers.forEach((answer, index) => {
     const canvas = document.getElementById(`answerCanvas${index}`);
     if (!canvas) return;
@@ -53,7 +62,7 @@ const drawAllAnswers = () => {
 const onAnswerClicked = (index) => {
   if (store.state.isAnswerRevealed && store.getters.correctAnswerIndex === index) {
     store.commit('generate');
-  } else {
+  } else if (!store.state.isAnswerRevealed) {
     store.commit('selectAnswer', index);
   }
 };
@@ -72,11 +81,12 @@ const answerCanvasClass = (index) => {
   const selectedIndex = store.state.selectedAnswerIndex;
 
   if (index === correctIndex) {
-    return 'outline outline-green-500 outline-2 border-transparent';
+    const animationClass = (selectedIndex === correctIndex) ? 'animate__animated animate__pulse animate__faster' : '';
+    return 'outline outline-green-500 outline-2 border-transparent ' + animationClass;
   }
 
   if (index === selectedIndex && selectedIndex !== correctIndex) {
-    return 'outline outline-red-500 outline-2 border-transparent';
+    return 'outline outline-red-500 outline-2 border-transparent animate__animated animate__headShake';
   }
 
   return 'opacity-25 border-gray-300 border-dashed';

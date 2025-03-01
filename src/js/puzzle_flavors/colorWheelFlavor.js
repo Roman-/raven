@@ -91,7 +91,7 @@ function drawColorRing(
         ctx.closePath();
 
         // Calculate hue from 0..360 across all sections
-        const hue = (100 * i) / sections + hueShift;
+        const hue = (200 * i) / sections + hueShift;
 
         ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
 
