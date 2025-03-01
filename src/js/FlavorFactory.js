@@ -9,7 +9,7 @@ const flavors = [
         emojiFlavor,
         squareGradientsFlavor,
         shapeFlavor,
-        colorWheelFlavor,
+        // colorWheelFlavor,
 ]
 
 export const getRandomFlavor = (numFeatures) => {
