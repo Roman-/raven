@@ -32,13 +32,15 @@ export const multiShapeFlavor = {
             'amount': [1, 2, 3]
         }
     },
-    drawCell: (ctx, cell, x, y, size) => {
+    drawCell: (ctx, cell, size) => {
         // Set the stroke & fill styles from the cell's features
         ctx.fillStyle = cell.color || 'gray'
         ctx.lineWidth = 3
         ctx.strokeStyle = 'black'
 
         const sizeChange = size * 0.3
+        let x = 0
+        let y = 0
         for (let i = 0; i < cell.amount; i++) {
             ctx.beginPath()
             drawShape(ctx, cell.shape, x, y, size)

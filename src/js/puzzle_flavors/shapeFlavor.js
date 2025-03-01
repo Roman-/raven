@@ -37,14 +37,14 @@ export const shapeFlavor = {
             'color': getRandomPaletteForShapes(),
         }
     },
-    drawCell: (ctx, cell, x, y, size) => {
+    drawCell: (ctx, cell, size) => {
         // Set the stroke & fill styles from the cell's features
         ctx.fillStyle = cell.color || 'gray'
         ctx.lineWidth = 3
         ctx.strokeStyle = 'black'
 
         ctx.beginPath()
-        drawShape(ctx, cell.shape, x, y, size)
+        drawShape(ctx, cell.shape, 0, 0, size)
         ctx.fill()
         ctx.stroke()
     }

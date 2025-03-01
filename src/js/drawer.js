@@ -1,16 +1,25 @@
 // cells - 2D array of cell objects
-// drawCell - function that draws a single cell (ctx, cell, x, y, size)
+// drawCell - function that draws a single cell (offscreenCtx, cell, size)
 // revealAnswer - boolean: if true, draw the real cell instead of question mark
 // answerStyle: 'q' for question mark, 'n' for normal, 'r' for revealed (outlined)
 export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, answerStyle, strokeShade = "000000") => {
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }
+
+    // Draw the outer border of the puzzle
     ctx.strokeStyle = `#${strokeShade}55`;
     ctx.lineWidth = 1;
     ctx.strokeRect(startX, startY, puzzleSize, puzzleSize);
 
+    // Each puzzle is 3x3, so each cell is puzzleSize/3
     const cellSize = puzzleSize / 3;
+
+    // Create a single offscreen canvas once
+    const offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = cellSize;
+    offscreenCanvas.height = cellSize;
+    const offscreenCtx = offscreenCanvas.getContext('2d');
 
     for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
@@ -18,23 +27,37 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
             const cellX = startX + col * cellSize;
             const cellY = startY + row * cellSize;
 
-            // outline the cell
-            ctx.strokeStyle = `#${strokeShade}33`
+            // Outline each cell
+            ctx.strokeStyle = `#${strokeShade}33`;
             ctx.lineWidth = 1;
             ctx.strokeRect(cellX, cellY, cellSize, cellSize);
 
-            ctx.save();
+            // Clear the offscreen canvas and draw the cell
+            offscreenCtx.clearRect(0, 0, cellSize, cellSize);
+
+            // If it's an answer cell and we're showing question marks:
             if (cell.isAnswer && answerStyle === 'q') {
-                drawQuestionMark(ctx, cellX, cellY, cellSize);
+                drawQuestionMark(offscreenCtx, 0, 0, cellSize);
             } else {
-                drawCell(ctx, cell, cellX, cellY, cellSize);
+                // Use the updated drawCell callback signature:
+                // drawCell(offscreenCtx, cell, cellSize)
+                drawCell(offscreenCtx, cell, cellSize);
             }
-            ctx.restore();
+
+            // Now copy that offscreen result onto the main canvas
+            ctx.drawImage(offscreenCanvas, cellX, cellY);
+
+            // If it's a revealed cell, outline it with a bold stroke
             if (cell.isAnswer && answerStyle === 'r') {
-                const margin = 1
-                ctx.strokeStyle = `#${strokeShade}`
-                ctx.lineWidth = margin
-                ctx.strokeRect(cellX + margin, cellY + margin, cellSize - margin * 2, cellSize - margin * 2);
+                const margin = 1;
+                ctx.strokeStyle = `#${strokeShade}`;
+                ctx.lineWidth = margin;
+                ctx.strokeRect(
+                    cellX + margin,
+                    cellY + margin,
+                    cellSize - margin * 2,
+                    cellSize - margin * 2
+                );
             }
         }
     }

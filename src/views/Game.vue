@@ -46,7 +46,7 @@ const drawAllAnswers = () => {
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
 
     // Now draw the shape for this answer
-    store.getters.drawCell(ctx, answer, 0, 0, answerCanvasSize.value);
+    store.getters.drawCell(ctx, answer, answerCanvasSize.value);
   });
 };
 

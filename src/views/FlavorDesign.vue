@@ -4,8 +4,9 @@ import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
 import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {squareGradientsFlavor} from "@/js/puzzle_flavors/squareGradientsFlavor";
+import {emojiFlavor} from "@/js/puzzle_flavors/emojiFlavor";
 
-const flavor = squareGradientsFlavor; // change to the flavor you're working with
+const flavor = emojiFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 
@@ -26,7 +27,7 @@ const draw = () => {
 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
-    flavor.drawCell(ctx, answer, 0, 0, answerCanvasSize.value);
+    flavor.drawCell(ctx, answer, answerCanvasSize.value);
   });
 };
 

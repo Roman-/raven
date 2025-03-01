@@ -7,7 +7,8 @@ const flavors = [
         multiShapeFlavor,
         emojiFlavor,
         squareGradientsFlavor,
-        shapeFlavor
+        shapeFlavor,
+        // cocentricCirclesFlavor
 ]
 
 export const getRandomFlavor = (numFeatures) => {

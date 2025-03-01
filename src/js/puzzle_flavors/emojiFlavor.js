@@ -18,11 +18,11 @@ export const emojiFlavor = {
             'emoji': randomElement(emojiCategories),
         }
     },
-    drawCell: (ctx, cell, x, y, size) => {
+    drawCell: (ctx, cell, size) => {
         // emoji text inside the cell
         ctx.font = `${Math.floor(size * 0.6)}px Arial`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(cell.emoji, x + size / 2, y + size / 2);
+        ctx.fillText(cell.emoji, size / 2, size / 2);
     }
 }
