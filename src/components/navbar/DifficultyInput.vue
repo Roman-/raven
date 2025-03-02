@@ -1,20 +1,22 @@
 <script setup>
 import { store } from "@/store/store";
 
+const maxDifficulty = 4; // inclusive
+
 const decreaseDifficulty = () => {
-  // Prevent going below 1
-  if (store.state.difficulty > 1) {
-    store.commit("setDifficulty", store.state.difficulty - 1);
-    store.commit("generate");
+  if (store.state.difficulty <= 1) {
+    return;
   }
+  store.commit("setDifficulty", store.state.difficulty - 1);
+  store.commit("generate");
 };
 
 const increaseDifficulty = () => {
-  // Prevent going above 3
-  if (store.state.difficulty < 3) {
-    store.commit("setDifficulty", store.state.difficulty + 1);
-    store.commit("generate");
+  if (store.state.difficulty >= maxDifficulty) {
+    return;
   }
+  store.commit("setDifficulty", store.state.difficulty + 1);
+  store.commit("generate");
 };
 </script>
 

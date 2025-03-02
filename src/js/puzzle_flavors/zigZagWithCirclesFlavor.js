@@ -88,50 +88,47 @@ function drawZigZagWithCircles(ctx, size, amplitude, frequency, phase, numCircle
     }
 
     // ---- 4. Place circles evenly spaced along that totalLength ----
-    const r = circleRadius * size;               // Actual radius in pixels
-    const circleSpacing = totalLength / (numCircles - 1);
-
-    // Function to interpolate between p0 and p1 at fraction t in [0..1]
-    function interpolate(p0, p1, t) {
-        return {
-            x: p0.x + (p1.x - p0.x) * t,
-            y: p0.y + (p1.y - p0.y) * t
-        };
+    if (points.length < 2) {
+        console.error("Not enough points to interpolate");
+        return;
     }
 
-    // Current distance along the zig-zag as we place each circle
+    if (numCircles > points.length) {
+        numCircles = points.length;
+    }
+
+    const r = circleRadius * size;
+    const circleSpacing = totalLength / Math.max(1, numCircles - 1);
+
     let distSoFar = 0;
 
     for (let c = 0; c < numCircles; c++) {
         const targetDist = c * circleSpacing;
 
-        // Find which segment this distance falls into
         let segIndex = 0;
         let accumulated = 0;
 
-        while (
-            segIndex < segmentLengths.length &&
-            accumulated + segmentLengths[segIndex] < targetDist
-            ) {
+        while (segIndex < segmentLengths.length && accumulated + segmentLengths[segIndex] < targetDist) {
             accumulated += segmentLengths[segIndex];
             segIndex++;
         }
 
-        // Now interpolate along segment `segIndex`
-        if (segIndex >= segmentLengths.length) {
-            // Just clamp to the last point
-            segIndex = segmentLengths.length - 1;
+        if (segIndex >= segmentLengths.length - 1) {
+            segIndex = segmentLengths.length - 2;
         }
 
-        const segLen = segmentLengths[segIndex];
         const segmentStart = points[segIndex];
         const segmentEnd = points[segIndex + 1];
 
-        // Fraction along this segment
+        if (!segmentStart || !segmentEnd) {
+            console.error(`Invalid segment points at index ${segIndex}`);
+            continue;
+        }
+
+        const segLen = segmentLengths[segIndex];
         const frac = (targetDist - accumulated) / segLen;
         const circlePos = interpolate(segmentStart, segmentEnd, frac);
 
-        // ---- 5. Draw the circle ----
         ctx.beginPath();
         ctx.arc(circlePos.x, circlePos.y, r, 0, 2 * Math.PI, false);
         ctx.fillStyle = palette[c % palette.length];

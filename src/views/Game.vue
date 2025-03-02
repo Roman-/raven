@@ -14,12 +14,18 @@ const answerCanvasSize = ref(100);
 
 // Watch the store's puzzle/answers to redraw
 const drawAll = () => {
+  if (!store.state.cellsAndAnswers || !store.state.cellsAndAnswers.cells) {
+    return;
+  }
   drawPuzzle()
   drawAllAnswers()
 };
 
 const drawPuzzle = () => {
-  if (!puzzleCanvas.value) return;
+  if (!puzzleCanvas.value || !store.state.cellsAndAnswers) {
+    setTimeout(drawPuzzle, 1);
+    return;
+  }
   const ctx = puzzleCanvas.value.getContext('2d');
   ctx.clearRect(0, 0, puzzleCanvasSize.value, puzzleCanvasSize.value);
 
@@ -143,8 +149,12 @@ const onPuzzleBoardClicked = () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center">
-    <!-- Puzzle Canvas -->
+  <div
+      v-if="!store.state.cellsAndAnswers || !store.state.cellsAndAnswers.cells"
+    class="flex flex-col items-center">
+    Can't generate puzzle of difficulty {{store.state.difficulty}}
+  </div>
+  <div v-else class="flex flex-col items-center">
     <canvas
         ref="puzzleCanvas"
         :width="puzzleCanvasSize"

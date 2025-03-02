@@ -42,7 +42,14 @@ export const store = createStore({
     mutations: {
         // Generate a new puzzle
         generate (state) {
+            state.selectedAnswerIndex = null;
+            state.isAnswerRevealed = false;
+
             state.flavor = getRandomFlavor(state.difficulty)
+            if (!state.flavor) {
+                state.cellsAndAnswers = null;
+                return;
+            }
             const numFeatures = Object.keys(state.flavor.getFeaturesVariations()).length;
             const grids = generateSetOfGrids(numFeatures, state.difficulty);
 
@@ -52,10 +59,6 @@ export const store = createStore({
                 state.flavor,
                 state.numAnswers
             );
-
-            // Reset interactive state
-            state.selectedAnswerIndex = null;
-            state.isAnswerRevealed = false;
         },
         // Player clicked an answer: record it and reveal correctness
         selectAnswer (state, index) {

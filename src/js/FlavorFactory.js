@@ -16,7 +16,7 @@ export const getRandomFlavor = (numFeatures) => {
         const availableFlavors = flavors.filter(f => Object.keys(f.getFeaturesVariations()).length >= numFeatures);
         if (availableFlavors.length === 0) {
             let description = flavors.map(f => f.name + " (" + Object.keys(f.getFeaturesVariations()).length + ")").join(", ");
-            throw new Error(`No flavors available for ${numFeatures} features. All flavors:` + description);
+            return null;
         }
         const randomIndex = Math.floor(Math.random() * availableFlavors.length);
         return availableFlavors[randomIndex];
