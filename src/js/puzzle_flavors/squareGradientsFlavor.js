@@ -1,6 +1,7 @@
 export const squareGradientsFlavor = {
     name: 'Gradients',
-    description: 'Direction and colorset',
+    description: 'Direction and palette',
+    isArtistic: true,
     getFeaturesVariations: () => {
         return {
             'direction': ['right', 'down', 'diag1', 'diag2'],

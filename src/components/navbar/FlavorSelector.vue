@@ -36,7 +36,6 @@ const allFlavorsList = computed(() => allFlavors);
 <template>
   <button
       class="btn btn-sm mx-2"
-      :class="{'btn-warning': store.state.selectedFlavors.length !== allFlavors.length}"
       @click="openDialog"
       title="Select Flavors">
     <i class="bi bi-card-checklist"></i>

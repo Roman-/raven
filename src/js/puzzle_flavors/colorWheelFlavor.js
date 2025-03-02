@@ -1,6 +1,7 @@
 export const colorWheelFlavor = {
     name: 'Color Wheel',
     description: 'HSL colors and thickness',
+    isArtistic: true,
     getFeaturesVariations: () => {
         return {
             'thickness': [0.15, 0.3, 0.5],

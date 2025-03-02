@@ -1,6 +1,7 @@
 export const columnsOfCirclesFlavor = {
     name: 'Columns of Circles',
     description: 'Circles arranged in columns',
+    isArtistic: true,
     getFeaturesVariations: () => {
         return {
             'numColumns': [4, 8, 16],

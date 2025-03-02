@@ -8,7 +8,7 @@ export const store = createStore({
     state () {
         return {
             difficulty: 2,
-            selectedFlavors: [ ...allFlavors ],
+            selectedFlavors: [ ...allFlavors ].filter(f => !f.isArtistic),
             flavor: null,
             cellsAndAnswers: null,
             numAnswers: 8,
