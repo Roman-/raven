@@ -3,13 +3,15 @@ import {emojiFlavor} from "@/js/puzzle_flavors/emojiFlavor";
 import {squareGradientsFlavor} from "@/js/puzzle_flavors/squareGradientsFlavor";
 import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {colorWheelFlavor} from "@/js/puzzle_flavors/colorWheelFlavor";
+import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
 
 export const allFlavors = [
         multiShapeFlavor,
         emojiFlavor,
         squareGradientsFlavor,
         shapeFlavor,
-        // colorWheelFlavor,
+        columnsOfCirclesFlavor,
+        colorWheelFlavor,
 ]
 
 export const getRandomFlavor = (flavors, numFeatures) => {
