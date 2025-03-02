@@ -5,7 +5,7 @@
 import {seededRandom} from "@/js/helpers";
 import {store} from "@/store/store";
 
-export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, seed, answerStyle, strokeShade = "000000") => {
+export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, seedOfCellZero, answerStyle, strokeShade = "000000") => {
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }
@@ -27,10 +27,11 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
     for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
             const cell = cells[row][col];
-            const cellX = startX + col * cellSize;
-            const cellY = startY + row * cellSize;
+            const seed = seedOfCellZero + cell.index
 
             // Outline each cell
+            const cellX = startX + col * cellSize;
+            const cellY = startY + row * cellSize;
             ctx.strokeStyle = `#${strokeShade}33`;
             ctx.lineWidth = 1;
             ctx.strokeRect(cellX, cellY, cellSize, cellSize);

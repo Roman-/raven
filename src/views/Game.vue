@@ -62,7 +62,7 @@ const drawAllAnswers = () => {
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
 
     // Now draw the shape for this answer
-    store.getters.drawCell(ctx, answer, answerCanvasSize.value, seededRandom(store.state.randomSeed));
+    store.getters.drawCell(ctx, answer, answerCanvasSize.value, seededRandom(store.state.randomSeed + answer.index));
   });
 };
 

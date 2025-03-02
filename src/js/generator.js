@@ -22,7 +22,9 @@ export const generateCellsAndAnswers = (grids, flavor, numAnswers) => {
     for (let row = 0; row < 3; row++) {
         cells[row] = []
         for (let col = 0; col < 3; col++) {
-            const cell = {}
+            const cell = {
+                index: row * 3 + col
+            }
             // For each feature, pick from chosenVariationsForFeature based on grids[featureIndex][row][col]
             featureNames.forEach((feature, featureIndex) => {
                 const gridValue = grids[featureIndex][row][col] // 0,1,2
