@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
+import {allFlavors} from "@/js/FlavorFactory";
 
 const store = useStore();
 const flavorDialog = ref(null);
@@ -14,7 +15,7 @@ function closeDialog() {
 
 // For each flavor, we want to see if it is in "availableFlavors".
 function isSelected(flavor) {
-  return store.state.availableFlavors.includes(flavor);
+  return store.state.selectedFlavors.includes(flavor);
 }
 
 function toggleFlavor(flavor) {
@@ -29,7 +30,7 @@ function selectNone() {
   store.commit('selectNoFlavors');
 }
 
-const allFlavorsList = computed(() => store.state.allFlavors);
+const allFlavorsList = computed(() => allFlavors);
 </script>
 
 <template>

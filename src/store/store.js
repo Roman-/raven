@@ -8,10 +8,7 @@ export const store = createStore({
     state () {
         return {
             difficulty: 2,
-            // This holds *all* the flavors you have:
-            allFlavors: allFlavors,
-            // This holds only the flavors currently selected (used for puzzle generation):
-            availableFlavors: [ ...allFlavors ],
+            selectedFlavors: [ ...allFlavors ],
             flavor: null,
             cellsAndAnswers: null,
             numAnswers: 8,
@@ -44,7 +41,7 @@ export const store = createStore({
             state.isAnswerRevealed = false;
 
             // Generate puzzle only from selected flavors:
-            state.flavor = getRandomFlavor(state.availableFlavors, state.difficulty);
+            state.flavor = getRandomFlavor(state.selectedFlavors, state.difficulty);
             if (!state.flavor) {
                 state.cellsAndAnswers = null;
                 return;
@@ -68,19 +65,19 @@ export const store = createStore({
 
         // (Optional) Some helper mutations if you want them:
         selectAllFlavors (state) {
-            state.availableFlavors = [...state.allFlavors];
+            state.selectedFlavors = [...allFlavors];
         },
         selectNoFlavors (state) {
-            state.availableFlavors = [];
+            state.selectedFlavors = [];
         },
         toggleFlavor (state, flavor) {
-            const idx = state.availableFlavors.indexOf(flavor);
+            const idx = state.selectedFlavors.indexOf(flavor);
             if (idx > -1) {
                 // remove it from array
-                state.availableFlavors.splice(idx, 1);
+                state.selectedFlavors.splice(idx, 1);
             } else {
                 // add it
-                state.availableFlavors.push(flavor);
+                state.selectedFlavors.push(flavor);
             }
         }
     },
