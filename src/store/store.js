@@ -1,14 +1,15 @@
 import { createStore } from 'vuex'
 import { generateCellsAndAnswers } from "@/js/generator";
 import {generateSetOfGrids, generateSetOfGridsMaximumDifficulty} from "@/js/grids";
-import {getRandomFlavor} from "@/js/FlavorFactory";
+import {allFlavors, getRandomFlavor} from "@/js/FlavorFactory";
 
 export const store = createStore({
     strict: true,
     state () {
         return {
             difficulty: 2,
-            flavor: getRandomFlavor(1),
+            availableFlavors: allFlavors,
+            flavor: null,
             cellsAndAnswers: null,
             numAnswers: 8,
 
@@ -45,7 +46,7 @@ export const store = createStore({
             state.selectedAnswerIndex = null;
             state.isAnswerRevealed = false;
 
-            state.flavor = getRandomFlavor(state.difficulty)
+            state.flavor = getRandomFlavor(state.availableFlavors, state.difficulty)
             if (!state.flavor) {
                 state.cellsAndAnswers = null;
                 return;
