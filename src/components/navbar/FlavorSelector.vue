@@ -1,19 +1,20 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import {allFlavors} from "@/js/FlavorFactory";
+import { allFlavors } from "@/js/FlavorFactory";
 
 const store = useStore();
 const flavorDialog = ref(null);
+
 function openDialog() {
   flavorDialog.value?.showModal();
 }
+
 function closeDialog() {
   flavorDialog.value?.close();
   store.commit('generate');
 }
 
-// For each flavor, we want to see if it is in "availableFlavors".
 function isSelected(flavor) {
   return store.state.selectedFlavors.includes(flavor);
 }
@@ -28,6 +29,12 @@ function selectAll() {
 
 function selectNone() {
   store.commit('selectNoFlavors');
+}
+
+function selectOnly(flavor) {
+  store.commit('selectNoFlavors');
+  store.commit('toggleFlavor', flavor);
+  closeDialog();
 }
 
 const allFlavorsList = computed(() => allFlavors);
@@ -52,7 +59,6 @@ const allFlavorsList = computed(() => allFlavors);
         <button class="btn btn-sm" type="button" @click.stop.prevent="selectNone">None</button>
       </div>
 
-      <!-- Show each flavor -->
       <div
           v-for="flavor in allFlavorsList"
           :key="flavor.name"
@@ -69,6 +75,12 @@ const allFlavorsList = computed(() => allFlavors);
             {{ flavor.name }}
           </span>
         </label>
+        <button
+            class="btn btn-xs btn-link"
+            type="button"
+            @click.stop.prevent="selectOnly(flavor)">
+          only
+        </button>
       </div>
 
       <div class="modal-action">
