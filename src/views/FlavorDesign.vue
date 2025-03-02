@@ -2,10 +2,9 @@
 import {onMounted, ref, watch} from 'vue';
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
-import {colorWheelFlavor} from "@/js/puzzle_flavors/colorWheelFlavor";
-import {zigZagWithCirclesFlavor} from "@/js/puzzle_flavors/zigZagWithCirclesFlavor";
+import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
 
-const flavor = zigZagWithCirclesFlavor; // change to the flavor you're working with
+const flavor = columnsOfCirclesFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 
