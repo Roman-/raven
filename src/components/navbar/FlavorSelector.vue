@@ -9,6 +9,7 @@ function openDialog() {
 }
 function closeDialog() {
   flavorDialog.value?.close();
+  store.commit('generate');
 }
 
 // For each flavor, we want to see if it is in "availableFlavors".
@@ -29,7 +30,6 @@ function selectNone() {
 }
 
 const allFlavorsList = computed(() => store.state.allFlavors);
-
 </script>
 
 <template>
@@ -54,20 +54,21 @@ const allFlavorsList = computed(() => store.state.allFlavors);
           :key="flavor.name"
           class="flex items-center gap-2 mb-2"
       >
-        <!-- use a checkbox to toggle the flavor -->
-        <input
-            type="checkbox"
-            class="checkbox"
-            :checked="isSelected(flavor)"
-            @change="toggleFlavor(flavor)"
-        />
-        <span>
-          {{ flavor.name }}
-        </span>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input
+              type="checkbox"
+              class="checkbox"
+              :checked="isSelected(flavor)"
+              @change="toggleFlavor(flavor)"
+          />
+          <span>
+            {{ flavor.name }}
+          </span>
+        </label>
       </div>
 
       <div class="modal-action">
-        <button class="btn" type="submit">Close</button>
+        <button class="btn" type="submit" @click="closeDialog">Close</button>
       </div>
     </form>
   </dialog>
