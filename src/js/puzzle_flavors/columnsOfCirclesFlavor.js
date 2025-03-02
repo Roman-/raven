@@ -9,18 +9,18 @@ export const columnsOfCirclesFlavor = {
         }
     },
     drawCell: (ctx, cell, size, rand) => {
-        drawColumnsOfCircles(ctx, size, cell.numColumns, cell.verticalDistance);
+        drawColumnsOfCircles(ctx, size, cell.numColumns, cell.verticalDistance, rand);
     }
 }
 
-function drawColumnsOfCircles(ctx, size, numColumns, verticalDistance) {
+function drawColumnsOfCircles(ctx, size, numColumns, verticalDistance, rand) {
     ctx.canvas.width = size;
     ctx.canvas.height = size;
     const radius = size / (numColumns * 2);
     const diameter = radius * 2;
     const stepY = diameter * verticalDistance;
 
-    let hue = 0 // TODO randomness
+    let hue = Math.ceil(rand() * 360)
     for (let i = 0; i < numColumns; i++) {
         const even = i % 2 === 0;
         let x = radius * (2 * i + 1);
