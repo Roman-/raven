@@ -5,8 +5,9 @@ import {generateCellsAndAnswers} from "@/js/generator";
 import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
 import {seededRandom} from "@/js/helpers";
 import {store} from "@/store/store";
+import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
 
-const flavor = tiledLinesFlavor; // change to the flavor you're working with
+const flavor = columnsOfCirclesFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 
@@ -15,6 +16,7 @@ const cellsAndAnswers = ref(null);
 const randomSeed = ref(1)
 
 const generateNew = () => {
+  randomSeed.value++;
   updateSizes()
   cellsAndAnswers.value = generateCellsAndAnswers( generateSetOfGridsMaximumDifficulty(numFeatures), flavor, numCanvases );
   setTimeout(draw, 1)
