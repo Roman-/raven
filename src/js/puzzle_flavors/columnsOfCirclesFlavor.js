@@ -20,7 +20,7 @@ function drawColumnsOfCircles(ctx, size, numColumns, verticalDistance) {
     const diameter = radius * 2;
     const stepY = diameter * verticalDistance;
 
-    let hue = Math.floor(Math.random() * 360);
+    let hue = 0 // TODO randomness
     for (let i = 0; i < numColumns; i++) {
         const even = i % 2 === 0;
         let x = radius * (2 * i + 1);
