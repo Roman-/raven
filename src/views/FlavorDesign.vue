@@ -2,9 +2,9 @@
 import {onMounted, ref, watch} from 'vue';
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
-import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
+import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
 
-const flavor = columnsOfCirclesFlavor; // change to the flavor you're working with
+const flavor = tiledLinesFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 

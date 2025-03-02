@@ -47,3 +47,22 @@ export const downloadCanvasAsPNG = (canvas, filename = "matrix.png") => {
     link.href = canvas.toDataURL("image/png")
     link.click()
 }
+
+function resetCanvasSettings(ctx) {
+    ctx.strokeStyle = '#000000';  // Default: black
+    ctx.fillStyle = '#000000';    // Default: black
+    ctx.lineWidth = 1;            // Default: 1px
+    ctx.lineCap = 'butt';         // Default: 'butt'
+    ctx.lineJoin = 'miter';       // Default: 'miter'
+    ctx.miterLimit = 10;          // Default: 10
+    ctx.globalAlpha = 1.0;        // Default: fully opaque
+    ctx.globalCompositeOperation = 'source-over'; // Default: normal drawing mode
+    ctx.shadowColor = 'rgba(0,0,0,0)'; // Default: transparent
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.font = '10px sans-serif';  // Default: '10px sans-serif'
+    ctx.textAlign = 'start';       // Default: 'start'
+    ctx.textBaseline = 'alphabetic'; // Default: 'alphabetic'
+    ctx.direction = 'ltr';         // Default: 'ltr'
+}
