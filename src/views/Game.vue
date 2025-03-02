@@ -2,7 +2,7 @@
 import {onMounted, ref, watch, onBeforeUnmount, computed} from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
-import {randomElement} from "@/js/helpers";
+import {randomElement, seededRandom} from "@/js/helpers";
 import 'animate.css';
 
 // Main puzzle dimension
@@ -39,7 +39,8 @@ const drawPuzzle = () => {
       puzzleCanvasSize.value,
       cells,
       store.getters.drawCell,
-      store.state.isAnswerRevealed ? 'r' : 'q',
+      store.state.randomSeed,
+      store.state.isAnswerRevealed ? 'r' : 'q'
   );
 };
 
@@ -61,7 +62,7 @@ const drawAllAnswers = () => {
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
 
     // Now draw the shape for this answer
-    store.getters.drawCell(ctx, answer, answerCanvasSize.value);
+    store.getters.drawCell(ctx, answer, answerCanvasSize.value, seededRandom(store.state.randomSeed));
   });
 };
 

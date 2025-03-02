@@ -12,6 +12,7 @@ export const store = createStore({
             flavor: null,
             cellsAndAnswers: null,
             numAnswers: 8,
+            randomSeed: 1,
 
             selectedAnswerIndex: null,
             isAnswerRevealed: false,
@@ -33,12 +34,16 @@ export const store = createStore({
         isAnswerCorrect (state, getters) {
             if (state.selectedAnswerIndex == null) return false;
             return state.selectedAnswerIndex === getters.correctAnswerIndex;
+        },
+        randomSeed (state) {
+            return state.randomSeed;
         }
     },
     mutations: {
         generate (state) {
             state.selectedAnswerIndex = null;
             state.isAnswerRevealed = false;
+            state.randomSeed++;
 
             // Generate puzzle only from selected flavors:
             state.flavor = getRandomFlavor(state.selectedFlavors, state.difficulty);

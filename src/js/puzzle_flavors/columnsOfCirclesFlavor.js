@@ -8,7 +8,7 @@ export const columnsOfCirclesFlavor = {
             'verticalDistance': [0.2, 0.7, 1],
         }
     },
-    drawCell: (ctx, cell, size) => {
+    drawCell: (ctx, cell, size, rand) => {
         drawColumnsOfCircles(ctx, size, cell.numColumns, cell.verticalDistance);
     }
 }

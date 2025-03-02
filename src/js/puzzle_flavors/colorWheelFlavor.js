@@ -9,7 +9,7 @@ export const colorWheelFlavor = {
             'hueShift': [0, 90, 180, 270],
         }
     },
-    drawCell: (ctx, cell, size) => {
+    drawCell: (ctx, cell, size, rand) => {
         drawColorRing(ctx, size/2, size/2, size * 0.9, size * 0.9 * cell.thickness, cell.slices, cell.hueShift);
     }
 }

@@ -3,6 +3,8 @@ import {onMounted, ref, watch} from 'vue';
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
 import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
+import {seededRandom} from "@/js/helpers";
+import {store} from "@/store/store";
 
 const flavor = tiledLinesFlavor; // change to the flavor you're working with
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
@@ -10,6 +12,7 @@ const numCanvases = 16
 
 const answerCanvasSize = ref(100);
 const cellsAndAnswers = ref(null);
+const randomSeed = ref(1)
 
 const generateNew = () => {
   updateSizes()
@@ -25,7 +28,7 @@ const draw = () => {
 
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
-    flavor.drawCell(ctx, answer, answerCanvasSize.value);
+    flavor.drawCell(ctx, answer, answerCanvasSize.value, seededRandom(randomSeed.value));
   });
 };
 
@@ -57,6 +60,18 @@ onMounted(() => {
       />
     </div>
   </div>
-  <button class="btn btn-primary" @click="generateNew">Generate New</button>
+
+  <div class="flex justify-center gap-2 mt-4">
+    <div>
+      <button class="btn btn-primary" @click="generateNew">Generate New</button>
+    </div>
+    <div>
+      {{randomSeed}}
+    </div>
+    <div>
+      <button class="btn btn-accent" @click="randomSeed++ && generateNew">++</button>
+    </div>
+
+  </div>
 </template>
 

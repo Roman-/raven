@@ -12,7 +12,7 @@ export const squareGradientsFlavor = {
                 ["#F8F5E9",  "#9DC08B", "#3A7D44", "#DF6D14" ],
             ]}
     },
-    drawCell: (ctx, cell, size) => {
+    drawCell: (ctx, cell, size, rand) => {
         // draw a square colored with cell[palette] gradient in the cell[direction]
         const dir = {
             'right': [0, 0, 0 + size, 0],

@@ -8,20 +8,20 @@ export const tiledLinesFlavor = {
             'lineWidthFactor': [0.005, 0.020, 0.050],
         }
     },
-    drawCell: (ctx, cell, size) => {
+    drawCell: (ctx, cell, size, rand) => {
         const lineWidth = size * cell.lineWidthFactor;
-        drawLines(ctx, size, cell.stepFactor, lineWidth);
+        drawLines(ctx, size, cell.stepFactor, lineWidth, rand);
     }
 }
 
-function drawLines(ctx, size, stepFactor, lineWidth) {
+function drawLines(ctx, size, stepFactor, lineWidth, rand) {
     ctx.beginPath(); // cancel any previous path
     const step = size * stepFactor;
     ctx.lineWidth = lineWidth;
     ctx.lineCap = 'square';
     ctx.strokeStyle = '#000000';
     function drawSingleLine(x, y, width, height) {
-        const leftToRight = Math.random() >= 0.5;
+        const leftToRight = rand() >= 0.5;
 
         if (leftToRight) {
             ctx.moveTo(x, y);

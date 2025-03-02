@@ -1,8 +1,11 @@
 // cells - 2D array of cell objects
-// drawCell - function that draws a single cell (offscreenCtx, cell, size)
+// drawCell - function that draws a single cell (offscreenCtx, cell, size, rand)
 // revealAnswer - boolean: if true, draw the real cell instead of question mark
 // answerStyle: 'q' for question mark, 'n' for normal, 'r' for revealed (outlined)
-export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, answerStyle, strokeShade = "000000") => {
+import {seededRandom} from "@/js/helpers";
+import {store} from "@/store/store";
+
+export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, seed, answerStyle, strokeShade = "000000") => {
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }
@@ -39,9 +42,7 @@ export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell,
             if (cell.isAnswer && answerStyle === 'q') {
                 drawQuestionMark(offscreenCtx, 0, 0, cellSize);
             } else {
-                // Use the updated drawCell callback signature:
-                // drawCell(offscreenCtx, cell, cellSize)
-                drawCell(offscreenCtx, cell, cellSize);
+                drawCell(offscreenCtx, cell, cellSize, seededRandom(seed));
             }
 
             // Now copy that offscreen result onto the main canvas

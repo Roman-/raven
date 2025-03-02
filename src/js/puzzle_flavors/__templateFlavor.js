@@ -7,10 +7,10 @@ export const templateFlavor = {
             'feature1': [1, 2, 3],
         }
     },
-    drawCell: (ctx, cell, size) => {
-        drawThing(ctx, size);
+    drawCell: (ctx, cell, size, rand) => {
+        drawThing(ctx, size, rand);
     }
 }
 
-function drawThing(ctx, size) {
+function drawThing(ctx, size, rand) {
 }

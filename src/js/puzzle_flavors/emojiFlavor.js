@@ -18,7 +18,7 @@ export const emojiFlavor = {
             'emoji': randomElement(emojiCategories),
         }
     },
-    drawCell: (ctx, cell, size) => {
+    drawCell: (ctx, cell, size, rand) => {
         // emoji text inside the cell
         ctx.font = `${Math.floor(size * 0.6)}px Arial`;
         ctx.textAlign = "center";
