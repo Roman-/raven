@@ -152,7 +152,7 @@ const onPuzzleBoardClicked = () => {
   <div
       v-if="!store.state.cellsAndAnswers || !store.state.cellsAndAnswers.cells"
     class="flex flex-col items-center">
-    Can't generate puzzle of difficulty {{store.state.difficulty}}
+    Can't generate a puzzle with current settings
   </div>
   <div v-else class="flex flex-col items-center">
     <canvas
