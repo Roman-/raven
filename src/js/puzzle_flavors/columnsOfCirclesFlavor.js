@@ -4,8 +4,8 @@ export const columnsOfCirclesFlavor = {
     isArtistic: true,
     getFeaturesVariations: () => {
         return {
-            'numColumns': [4, 8, 16],
-            'verticalDistance': [0.05, 0.5, 1],
+            'numColumns': [4, 8, 14],
+            'verticalDistance': [0.2, 0.7, 1],
         }
     },
     drawCell: (ctx, cell, size) => {
@@ -20,16 +20,19 @@ function drawColumnsOfCircles(ctx, size, numColumns, verticalDistance) {
     const diameter = radius * 2;
     const stepY = diameter * verticalDistance;
 
+    let hue = Math.floor(Math.random() * 360);
     for (let i = 0; i < numColumns; i++) {
+        const even = i % 2 === 0;
         let x = radius * (2 * i + 1);
-        let y = -diameter;
-        while (y < size + diameter) {
+        let y = even ? -diameter : size + diameter;
+        while (even ? y < size + diameter : y > -diameter) {
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            ctx.fillStyle = `hsl(${hue}, 90%, 50%)`;
             ctx.fill();
             ctx.closePath();
-            y += stepY;
+            y += even ? stepY : -stepY;
+            hue += (113);
         }
     }
 }
