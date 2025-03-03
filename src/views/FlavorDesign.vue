@@ -6,11 +6,15 @@ import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
 import {seededRandom} from "@/js/helpers";
 import {store} from "@/store/store";
 import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
+import {shapeUnionFlavor} from "@/js/puzzle_flavors/ShapeUnionFlavor";
 
-const flavor = columnsOfCirclesFlavor; // change to the flavor you're working with
+// *****************************************************************************
+// Change the flavor you're working with
+// *****************************************************************************
+const flavor = shapeUnionFlavor;
+
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
-
 const answerCanvasSize = ref(100);
 const cellsAndAnswers = ref(null);
 const randomSeed = ref(1)
