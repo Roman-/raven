@@ -20,7 +20,7 @@ const cellsAndAnswers = ref(null);
 const randomSeed = ref(1)
 
 const generateNew = () => {
-  randomSeed.value++;
+  randomSeed.value++
   updateSizes()
   cellsAndAnswers.value = generateCellsAndAnswers( generateSetOfGridsMaximumDifficulty(numFeatures), flavor, numCanvases );
   setTimeout(draw, 1)
