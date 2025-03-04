@@ -2,11 +2,10 @@
 import {onMounted, ref, watch} from 'vue';
 import {generateSetOfGridsMaximumDifficulty} from "@/js/grids";
 import {generateCellsAndAnswers} from "@/js/generator";
-import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
 import {seededRandom} from "@/js/helpers";
-import {store} from "@/store/store";
-import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
 import {shapeUnionFlavor} from "@/js/puzzle_flavors/ShapeUnionFlavor";
+import {store} from "@/store/store";
+import {drawPuzzleGrid} from "@/js/drawer";
 
 // *****************************************************************************
 // Change the flavor you're working with
@@ -16,6 +15,7 @@ const flavor = shapeUnionFlavor;
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
 const answerCanvasSize = ref(100);
+const puzzleCanvas = ref(null);
 const cellsAndAnswers = ref(null);
 const randomSeed = ref(1)
 
@@ -36,6 +36,20 @@ const draw = () => {
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
     flavor.drawCell(ctx, answer, answerCanvasSize.value, seededRandom(randomSeed.value));
   });
+
+  const puzzleCanvasSize = answerCanvasSize.value * 3;
+  const ctx = puzzleCanvas.value.getContext('2d');
+  ctx.clearRect(0, 0, puzzleCanvasSize, puzzleCanvasSize);
+  drawPuzzleGrid(
+      ctx,
+      0,
+      0,
+      puzzleCanvasSize,
+      cellsAndAnswers.value.cells,
+      flavor.drawCell,
+      randomSeed.value,
+      'r'
+  );
 };
 
 const updateSizes = () => {
@@ -51,8 +65,18 @@ onMounted(() => {
 
 <template>
   <div>
-    {{flavor.name}}
+    <button class="btn btn-primary" @click="generateNew">New '{{flavor.name}}'</button>
   </div>
+
+  <div>
+    <canvas
+        ref="puzzleCanvas"
+        :width="answerCanvasSize * 3"
+        :height="answerCanvasSize * 3"
+        class="border border-dashed"
+    />
+  </div>
+
   <div class="grid grid-cols-4 gap-2">
     <div
         v-for="(answer, index) in cellsAndAnswers?.answers || []"
@@ -65,19 +89,6 @@ onMounted(() => {
           class="border"
       />
     </div>
-  </div>
-
-  <div class="flex justify-center gap-2 mt-4">
-    <div>
-      <button class="btn btn-primary" @click="generateNew">Generate New</button>
-    </div>
-    <div>
-      {{randomSeed}}
-    </div>
-    <div>
-      <button class="btn btn-accent" @click="randomSeed++ && generateNew">++</button>
-    </div>
-
   </div>
 </template>
 

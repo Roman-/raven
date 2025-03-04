@@ -5,6 +5,7 @@ import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {colorWheelFlavor} from "@/js/puzzle_flavors/colorWheelFlavor";
 import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
 import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
+import {shapeUnionFlavor} from "@/js/puzzle_flavors/ShapeUnionFlavor";
 
 export const allFlavors = [
         multiShapeFlavor,
@@ -13,7 +14,8 @@ export const allFlavors = [
         shapeFlavor,
         columnsOfCirclesFlavor,
         colorWheelFlavor,
-    tiledLinesFlavor
+    tiledLinesFlavor,
+    // shapeUnionFlavor
 ]
 
 export const getRandomFlavor = (flavors, numFeatures) => {
