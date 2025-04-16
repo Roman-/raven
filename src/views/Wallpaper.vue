@@ -166,6 +166,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { shapeFlavor } from '@/js/puzzle_flavors/shapeFlavor'
+import { OneToThreeEmojiFlavor } from '@/js/puzzle_flavors/OneToThreeEmojiFlavor'
 import { drawPuzzleGrid } from '@/js/drawer'
 import { generateCellsAndAnswers } from '@/js/generator'
 import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
@@ -173,7 +174,7 @@ import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 
 /** Flavor used for demonstration; replace with your desired flavor if needed. */
-const flavor = shapeFlavor;
+const flavor = OneToThreeEmojiFlavor;
 
 /** Conversion helper: hex + alpha -> rgba(...) string */
 function hexToRgba(hex, alpha) {
