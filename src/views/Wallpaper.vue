@@ -1,13 +1,13 @@
 <template>
   <div class="p-2">
-    <!-- 1) The main buttons row -->
+    <!-- Main buttons row -->
     <div class="flex gap-2 flex-wrap mb-2">
       <button class="btn btn-primary" @click="generatePuzzle">Re-generate</button>
       <button class="btn btn-secondary" @click="downloadPng">Download PNG</button>
       <button class="btn btn-accent" @click="downloadTen">Download 10</button>
     </div>
 
-    <!-- 2) Our wallpaper canvas -->
+    <!-- Wallpaper canvas -->
     <canvas
         ref="canvasRef"
         :width="wallpaperWidth"
@@ -15,118 +15,159 @@
         style="border:1px solid #444; max-width:100%;"
     />
 
-    <!-- 3) Settings for the wallpaper -->
+    <!-- Settings -->
     <div class="mt-4 p-2 border border-gray-300 rounded">
       <h2 class="text-xl font-bold mb-2">Wallpaper Settings</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
         <!-- Canvas dimensions -->
         <div>
           <label class="block font-semibold mb-1">Canvas Width / Height</label>
           <div class="flex gap-2">
-            <input type="number" class="input input-bordered w-24" v-model.number="wallpaperWidth" />
-            <input type="number" class="input input-bordered w-24" v-model.number="wallpaperHeight" />
+            <input
+                type="number"
+                class="input input-bordered w-24"
+                v-model.number="wallpaperWidth"
+                @input="drawWallpaper"
+            />
+            <input
+                type="number"
+                class="input input-bordered w-24"
+                v-model.number="wallpaperHeight"
+                @input="drawWallpaper"
+            />
           </div>
         </div>
 
         <!-- Puzzle size ratio -->
         <div>
           <label class="block font-semibold mb-1">Puzzle Size Ratio (fraction of height)</label>
-          <input type="range" min="0.1" max="1" step="0.05" v-model.number="puzzleSizeRatio" class="range" />
+          <input
+              type="range"
+              min="0.1"
+              max="1"
+              step="0.05"
+              v-model.number="puzzleSizeRatio"
+              class="range"
+              @input="drawWallpaper"
+          />
           <p class="text-sm">Value: {{ puzzleSizeRatio }}</p>
         </div>
 
         <!-- Puzzle margin ratio -->
         <div>
           <label class="block font-semibold mb-1">Puzzle Margin Ratio (fraction of puzzle size)</label>
-          <input type="range" min="0" max="0.1" step="0.01" v-model.number="puzzleMarginRatio" class="range" />
+          <input
+              type="range"
+              min="0"
+              max="0.1"
+              step="0.01"
+              v-model.number="puzzleMarginRatio"
+              class="range"
+              @input="drawWallpaper"
+          />
           <p class="text-sm">Value: {{ puzzleMarginRatio }}</p>
         </div>
 
-        <!-- Answer row: cell size & gap -->
+        <!-- Answer Cell Size -->
         <div>
           <label class="block font-semibold mb-1">Answer Cell Size (px)</label>
-          <input type="number" class="input input-bordered w-24" v-model.number="answerCellSize" />
+          <input
+              type="range"
+              min="10"
+              max="300"
+              step="1"
+              v-model.number="answerCellSize"
+              class="range"
+              @input="drawWallpaper"
+          />
+          <p class="text-sm">Value: {{ answerCellSize }}</p>
         </div>
 
+        <!-- Answer Cell Gap -->
         <div>
           <label class="block font-semibold mb-1">Answer Cell Gap (px)</label>
-          <input type="number" class="input input-bordered w-24" v-model.number="answerGap" />
+          <input
+              type="range"
+              min="0"
+              max="50"
+              step="1"
+              v-model.number="answerGap"
+              class="range"
+              @input="drawWallpaper"
+          />
+          <p class="text-sm">Value: {{ answerGap }}</p>
         </div>
 
-        <!-- Border color & thickness -->
+        <!-- Border color -->
         <div>
-          <label class="block font-semibold mb-1">Puzzle Border Color (#hex)</label>
-          <input type="text" class="input input-bordered w-full" v-model="borderColor" />
+          <label class="block font-semibold mb-1">Puzzle Border Color</label>
+          <input
+              type="color"
+              class="input input-bordered w-full"
+              v-model="borderColor"
+              @input="drawWallpaper"
+          />
         </div>
+
+        <!-- Border thickness -->
         <div>
           <label class="block font-semibold mb-1">Puzzle Border Thickness (px)</label>
-          <input type="number" class="input input-bordered w-24" v-model.number="borderThickness" />
+          <input
+              type="range"
+              min="0"
+              max="10"
+              step="1"
+              v-model.number="borderThickness"
+              class="range"
+              @input="drawWallpaper"
+          />
+          <p class="text-sm">Value: {{ borderThickness }}</p>
         </div>
-      </div>
-
-      <div class="mt-2">
-        <button class="btn btn-outline" @click="onSettingsChanged">
-          Apply Changes
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { shapeFlavor } from '@/js/puzzle_flavors/shapeFlavor'
-
-const flavor = shapeFlavor; // can be replaced with your flavor
-
 import { drawPuzzleGrid } from '@/js/drawer'
 import { generateCellsAndAnswers } from '@/js/generator'
 import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
 import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 
-/** 2) Reactive state for user settings. */
-const selectedFlavorName   = ref(flavor.name);
-const wallpaperWidth       = ref(1920);
-const wallpaperHeight      = ref(1080);
-const puzzleSizeRatio      = ref(0.7);
-const puzzleMarginRatio    = ref(0.02);
-const answerCellSize       = ref(100);
-const answerGap            = ref(10);
-const borderColor          = ref('#ffffff55');
-const borderThickness      = ref(2);
+const flavor = shapeFlavor;
 
-// The puzzle data after generation
+// User settings
+const wallpaperWidth    = ref(1920);
+const wallpaperHeight   = ref(1080);
+const puzzleSizeRatio   = ref(0.7);
+const puzzleMarginRatio = ref(0.02);
+const answerCellSize    = ref(100);
+const answerGap         = ref(10);
+const borderColor       = ref('#ffffff55');
+const borderThickness   = ref(2);
+
 const puzzleData = ref(null);
-
-// We'll keep track of a numeric seed
 let lastSeedUsed = 999;
+const canvasRef = ref(null);
 
-/** 4) The main generate function. */
+// Generate new puzzle
 function generatePuzzle() {
-  // increment or randomize seed
   lastSeedUsed += 17 + Math.floor(Math.random() * 50);
-
-  // How many features does the selected flavor define?
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
-
-  // Use maximum difficulty with that many features
   const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
-
-  // Generate puzzle with up to 9 answers (or however many you want)
   puzzleData.value = generateCellsAndAnswers(grids, flavor, 9);
-
   drawWallpaper();
 }
 
-/** 5) Draw everything. */
+// Draw the entire wallpaper
 function drawWallpaper() {
   const canvas = canvasRef.value;
   if (!canvas || !puzzleData.value) return;
 
-  // In case user has changed the canvas dimension:
   canvas.width  = wallpaperWidth.value;
   canvas.height = wallpaperHeight.value;
 
@@ -150,7 +191,7 @@ function drawWallpaper() {
   const puzzleY = (canvas.height - puzzleSize) / 2;
   const margin = puzzleSize * puzzleMarginRatio.value;
 
-  // optional semi-transparent box behind puzzle
+  // Semi-transparent box behind puzzle
   ctx.fillStyle = borderColor.value;
   ctx.fillRect(
       puzzleX - margin,
@@ -159,7 +200,7 @@ function drawWallpaper() {
       puzzleSize + margin * 2
   );
 
-  // Draw the 3x3 puzzle with question style
+  // Draw puzzle (3x3)
   drawPuzzleGrid(
       ctx,
       puzzleX,
@@ -167,12 +208,12 @@ function drawWallpaper() {
       puzzleSize,
       puzzleData.value.cells,
       flavor.drawCell,
-      lastSeedUsed,  // numeric seed
-      'q',           // show question marks for answer cell
-      borderColor.value.replace('#','') // stroke shade
+      lastSeedUsed,
+      'q',
+      borderColor.value.replace('#','')
   );
 
-  // Optional border around puzzle region
+  // Optional border around puzzle
   if (borderThickness.value > 0) {
     ctx.save();
     ctx.strokeStyle = borderColor.value;
@@ -190,45 +231,37 @@ function drawWallpaper() {
   drawAnswersRow(ctx, puzzleData.value.answers);
 }
 
-/** 6) Draw the answer row at bottom. */
+// Draw answers at the bottom
 function drawAnswersRow(ctx, answers) {
-  if (!answers || answers.length === 0) return;
-
+  if (!answers || !answers.length) return;
   const totalWidth = answers.length * answerCellSize.value + (answers.length - 1) * answerGap.value;
   const startX = (ctx.canvas.width - totalWidth) / 2;
   const y = ctx.canvas.height - answerCellSize.value - 50;
 
   for (let i = 0; i < answers.length; i++) {
     const cellX = startX + i * (answerCellSize.value + answerGap.value);
-
-    // Light bounding box
     ctx.save();
     ctx.fillStyle = "rgba(255,255,255,0.15)";
     ctx.fillRect(cellX, y, answerCellSize.value, answerCellSize.value);
     ctx.restore();
 
-    // Offscreen canvas so we can draw at (0,0) inside it
     const offscreen = document.createElement('canvas');
     offscreen.width = answerCellSize.value;
     offscreen.height = answerCellSize.value;
     const offctx = offscreen.getContext('2d');
-
-    // Provide a seeded random, if your flavor needs it
     const rand = seededRandom(lastSeedUsed + i);
 
     flavor.drawCell(offctx, answers[i], answerCellSize.value, rand);
-
-    // Then copy onto main canvas at (cellX, y)
     ctx.drawImage(offscreen, cellX, y);
   }
 }
 
-/** 7) Download single PNG */
+// Download a single PNG
 function downloadPng() {
   downloadCanvasAsPNG(canvasRef.value, "wallpaper.png");
 }
 
-/** 8) Generate & download 10 wallpapers */
+// Generate & download 10 wallpapers
 function downloadTen() {
   const oldPuzzle = puzzleData.value;
   for (let i = 1; i <= 10; i++) {
@@ -239,20 +272,13 @@ function downloadTen() {
   drawWallpaper();
 }
 
-/** 9) If user changes settings, re-draw */
-function onSettingsChanged() {
-  drawWallpaper();
-}
-
-/** 10) Startup: generate once */
-const canvasRef = ref(null);
+// On mount, generate once
 onMounted(() => {
   generatePuzzle();
 });
 </script>
 
 <style scoped>
-/* Just an example. The canvas can have a max width but keep the internal resolution. */
 canvas {
   max-width: 100%;
   height: auto;
