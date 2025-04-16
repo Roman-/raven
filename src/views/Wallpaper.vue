@@ -79,8 +79,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { shapeFlavor } from '@/js/puzzle_flavors/shapeFlavor'
 
-const flavor = shapeFlavor;
-// You can import other flavors similarly...
+const flavor = shapeFlavor; // can be replaced with your flavor
 
 import { drawPuzzleGrid } from '@/js/drawer'
 import { generateCellsAndAnswers } from '@/js/generator'
