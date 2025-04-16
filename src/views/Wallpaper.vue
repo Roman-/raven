@@ -4,7 +4,7 @@
     <div class="flex gap-2 flex-wrap mb-2">
       <button class="btn btn-primary" @click="generatePuzzle">Re-generate</button>
       <button class="btn btn-secondary" @click="downloadPng">Download PNG</button>
-      <button class="btn btn-accent" @click="downloadTen">Download 10</button>
+      <button class="btn btn-accent" @click="downloadBulk">Download bulk</button>
     </div>
 
     <!-- Wallpaper canvas -->
@@ -327,12 +327,13 @@ function downloadPng() {
   downloadCanvasAsPNG(canvasRef.value, "wallpaper.png");
 }
 
-/** Generate & download 10 wallpapers. */
-function downloadTen() {
+function downloadBulk() {
+  const numWallpapers = 10;
   const oldPuzzle = puzzleData.value;
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= numWallpapers; i++) {
     generatePuzzle();
-    downloadCanvasAsPNG(canvasRef.value, `wallpaper_${i}.png`);
+    const filename = `wallpaper_${String(i).padStart(3, '0')}.png`;
+    downloadCanvasAsPNG(canvasRef.value, filename);
   }
   puzzleData.value = oldPuzzle;
   drawWallpaper();
