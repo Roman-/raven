@@ -1,3 +1,6 @@
+import {emojiCategories} from "@/js/draw/drawingCommon";
+import {randomElement} from "@/js/helpers";
+
 export const OneToThreeEmojiFlavor = {
     name: 'One to three emoji',
     description: 'One, two or three emoji in a row',
@@ -5,13 +8,13 @@ export const OneToThreeEmojiFlavor = {
     getFeaturesVariations: () => {
         return {
             'numEmoji': [1, 2, 3],
-            'symbol': ["😃", "🌳", "🍔"], // TODO
+            'symbol': randomElement(emojiCategories)
         }
     },
     drawCell: (ctx, cell, size, rand) => {
         const centerX = size / 2;
         const centerY = size / 2;
-        const fontSize = size * 0.35;
+        const fontSize = size * 0.4;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.font = `${fontSize}px sans-serif`;
