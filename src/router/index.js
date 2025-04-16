@@ -1,4 +1,3 @@
-// filename: src/router/index.js
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Game from "@/views/Game.vue";
 import FlavorDesign from "@/views/FlavorDesign.vue";
