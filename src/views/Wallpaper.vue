@@ -17,26 +17,24 @@
 
     <!-- Settings -->
     <div class="mt-4 p-2 border border-gray-300 rounded">
-      <h2 class="text-xl font-bold mb-2">Wallpaper Settings</h2>
+      <h2 class="text-xl font-bold mb-4">Wallpaper Settings</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Canvas dimensions -->
+
+        <!-- Canvas dimensions via select -->
         <div>
-          <label class="block font-semibold mb-1">Canvas Width / Height</label>
-          <div class="flex gap-2">
-            <input
-                type="number"
-                class="input input-bordered w-24"
-                v-model.number="wallpaperWidth"
-                @input="drawWallpaper"
-            />
-            <input
-                type="number"
-                class="input input-bordered w-24"
-                v-model.number="wallpaperHeight"
-                @input="drawWallpaper"
-            />
-          </div>
+          <label class="block font-semibold mb-1">Canvas Dimensions</label>
+          <select class="select select-bordered" v-model="selectedDimensions" @change="onDimensionsChanged">
+            <!-- Common desktop resolutions -->
+            <option value="1920x1080">1920 x 1080 (Full HD)</option>
+            <option value="2560x1440">2560 x 1440 (QHD)</option>
+            <option value="1280x720">1280 x 720 (HD)</option>
+            <!-- Common phone resolutions -->
+            <option value="1080x1920">1080 x 1920 (FHD Portrait)</option>
+            <option value="720x1280">720 x 1280 (HD Portrait)</option>
+            <option value="1440x2560">1440 x 2560 (QHD Portrait)</option>
+          </select>
+          <p class="text-sm mt-1">Currently: {{ wallpaperWidth }} x {{ wallpaperHeight }}</p>
         </div>
 
         <!-- Puzzle size ratio -->
@@ -60,13 +58,28 @@
           <input
               type="range"
               min="0"
-              max="0.1"
+              max="0.3"
               step="0.01"
               v-model.number="puzzleMarginRatio"
               class="range"
               @input="drawWallpaper"
           />
           <p class="text-sm">Value: {{ puzzleMarginRatio }}</p>
+        </div>
+
+        <!-- Grid Y offset -->
+        <div>
+          <label class="block font-semibold mb-1">Puzzle Y Offset (px)</label>
+          <input
+              type="range"
+              min="-300"
+              max="300"
+              step="1"
+              v-model.number="gridYOffset"
+              class="range"
+              @input="drawWallpaper"
+          />
+          <p class="text-sm">Value: {{ gridYOffset }}</p>
         </div>
 
         <!-- Answer Cell Size -->
@@ -108,21 +121,42 @@
               v-model="borderColor"
               @input="drawWallpaper"
           />
+          <label class="block font-semibold mt-2">Border Alpha</label>
+          <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              v-model.number="borderAlpha"
+              class="range"
+              @input="drawWallpaper"
+          />
+          <p class="text-sm">Alpha: {{ borderAlpha }}</p>
         </div>
 
         <!-- Border thickness -->
         <div>
           <label class="block font-semibold mb-1">Puzzle Border Thickness (px)</label>
           <input
-              type="range"
+              type="number"
               min="0"
-              max="10"
-              step="1"
+              class="input input-bordered w-24"
               v-model.number="borderThickness"
-              class="range"
               @input="drawWallpaper"
           />
           <p class="text-sm">Value: {{ borderThickness }}</p>
+
+          <label class="block font-semibold mt-2">Border Roundness (px)</label>
+          <input
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              v-model.number="borderRadius"
+              class="range"
+              @input="drawWallpaper"
+          />
+          <p class="text-sm">Value: {{ borderRadius }}</p>
         </div>
       </div>
     </div>
@@ -138,23 +172,64 @@ import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
 import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 
+/** Flavor used for demonstration; replace with your desired flavor if needed. */
 const flavor = shapeFlavor;
 
-// User settings
-const wallpaperWidth    = ref(1920);
-const wallpaperHeight   = ref(1080);
-const puzzleSizeRatio   = ref(0.7);
-const puzzleMarginRatio = ref(0.02);
-const answerCellSize    = ref(100);
-const answerGap         = ref(10);
-const borderColor       = ref('#ffffff55');
-const borderThickness   = ref(2);
+/** Conversion helper: hex + alpha -> rgba(...) string */
+function hexToRgba(hex, alpha) {
+  const trimmed = hex.replace(/^#/, '');
+  let r = parseInt(trimmed.substring(0, 2), 16);
+  let g = parseInt(trimmed.substring(2, 4), 16);
+  let b = parseInt(trimmed.substring(4, 6), 16);
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    // Fallback to white if invalid
+    return `rgba(255,255,255,${alpha})`;
+  }
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
-const puzzleData = ref(null);
-let lastSeedUsed = 999;
-const canvasRef = ref(null);
+/** Draw a rounded rectangle path */
+function drawRoundedRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
 
-// Generate new puzzle
+// Settings
+const selectedDimensions  = ref("1920x1080");
+const wallpaperWidth      = ref(1920);
+const wallpaperHeight     = ref(1080);
+const puzzleSizeRatio     = ref(0.7);
+const puzzleMarginRatio   = ref(0.02);
+const gridYOffset         = ref(0);      // new range to shift puzzle vertically
+const answerCellSize      = ref(100);
+const answerGap           = ref(10);
+const borderColor         = ref('#ffffff');
+const borderAlpha         = ref(0.33);   // default alpha
+const borderThickness     = ref(2);
+const borderRadius        = ref(0);
+
+const puzzleData          = ref(null);
+let lastSeedUsed          = 999;
+const canvasRef           = ref(null);
+
+/** Parse selected <select> value, update width/height, re-draw. */
+function onDimensionsChanged() {
+  const [w, h] = selectedDimensions.value.split('x').map(Number);
+  wallpaperWidth.value  = w;
+  wallpaperHeight.value = h;
+  drawWallpaper();
+}
+
+/** Generate a puzzle. */
 function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50);
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
@@ -163,7 +238,7 @@ function generatePuzzle() {
   drawWallpaper();
 }
 
-// Draw the entire wallpaper
+/** Main draw method. */
 function drawWallpaper() {
   const canvas = canvasRef.value;
   if (!canvas || !puzzleData.value) return;
@@ -185,20 +260,16 @@ function drawWallpaper() {
   const chosenPalette = randomElement(palettes);
   drawRandomLinearGradient(ctx, 0, 0, canvas.width, canvas.height, chosenPalette);
 
-  // Puzzle placement
+  // Puzzle size and placement
   const puzzleSize = canvas.height * puzzleSizeRatio.value;
   const puzzleX = (canvas.width - puzzleSize) / 2;
-  const puzzleY = (canvas.height - puzzleSize) / 2;
+  const puzzleY = ((canvas.height - puzzleSize) / 2) + gridYOffset.value;
   const margin = puzzleSize * puzzleMarginRatio.value;
 
-  // Semi-transparent box behind puzzle
-  ctx.fillStyle = borderColor.value;
-  ctx.fillRect(
-      puzzleX - margin,
-      puzzleY - margin,
-      puzzleSize + margin * 2,
-      puzzleSize + margin * 2
-  );
+  // Semi-transparent rounded box behind puzzle
+  ctx.fillStyle = hexToRgba(borderColor.value, borderAlpha.value);
+  drawRoundedRect(ctx, puzzleX - margin, puzzleY - margin, puzzleSize + margin * 2, puzzleSize + margin * 2, borderRadius.value);
+  ctx.fill();
 
   // Draw puzzle (3x3)
   drawPuzzleGrid(
@@ -210,36 +281,35 @@ function drawWallpaper() {
       flavor.drawCell,
       lastSeedUsed,
       'q',
+      // the puzzle's internal lines use partial alpha (#COLOR33 or #COLOR55)
       borderColor.value.replace('#','')
   );
 
-  // Optional border around puzzle
+  // Optional border stroke around that rounded region
   if (borderThickness.value > 0) {
     ctx.save();
-    ctx.strokeStyle = borderColor.value;
+    ctx.strokeStyle = hexToRgba(borderColor.value, borderAlpha.value);
     ctx.lineWidth = borderThickness.value;
-    ctx.strokeRect(
-        puzzleX - margin,
-        puzzleY - margin,
-        puzzleSize + margin * 2,
-        puzzleSize + margin * 2
-    );
+    drawRoundedRect(ctx, puzzleX - margin, puzzleY - margin, puzzleSize + margin * 2, puzzleSize + margin * 2, borderRadius.value);
+    ctx.stroke();
     ctx.restore();
   }
 
-  // Draw answer row
+  // Draw answers row
   drawAnswersRow(ctx, puzzleData.value.answers);
 }
 
-// Draw answers at the bottom
+/** Draw the row of answers at the bottom. */
 function drawAnswersRow(ctx, answers) {
   if (!answers || !answers.length) return;
   const totalWidth = answers.length * answerCellSize.value + (answers.length - 1) * answerGap.value;
   const startX = (ctx.canvas.width - totalWidth) / 2;
-  const y = ctx.canvas.height - answerCellSize.value - 50;
+  const y = ctx.canvas.height - answerCellSize.value - 50; // near bottom
 
   for (let i = 0; i < answers.length; i++) {
     const cellX = startX + i * (answerCellSize.value + answerGap.value);
+
+    // Light bounding box
     ctx.save();
     ctx.fillStyle = "rgba(255,255,255,0.15)";
     ctx.fillRect(cellX, y, answerCellSize.value, answerCellSize.value);
@@ -256,12 +326,12 @@ function drawAnswersRow(ctx, answers) {
   }
 }
 
-// Download a single PNG
+/** Download single PNG. */
 function downloadPng() {
   downloadCanvasAsPNG(canvasRef.value, "wallpaper.png");
 }
 
-// Generate & download 10 wallpapers
+/** Generate & download 10 wallpapers */
 function downloadTen() {
   const oldPuzzle = puzzleData.value;
   for (let i = 1; i <= 10; i++) {
@@ -272,7 +342,7 @@ function downloadTen() {
   drawWallpaper();
 }
 
-// On mount, generate once
+/** On mount, generate one puzzle by default. */
 onMounted(() => {
   generatePuzzle();
 });
