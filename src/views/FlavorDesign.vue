@@ -6,11 +6,12 @@ import {seededRandom} from "@/js/helpers";
 import {shapeUnionFlavor} from "@/js/puzzle_flavors/ShapeUnionFlavor";
 import {store} from "@/store/store";
 import {drawPuzzleGrid} from "@/js/drawer";
+import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
 
 // *****************************************************************************
 // Change the flavor you're working with
 // *****************************************************************************
-const flavor = shapeUnionFlavor;
+const flavor = concentricCirclesFlavor;
 
 const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
 const numCanvases = 16
