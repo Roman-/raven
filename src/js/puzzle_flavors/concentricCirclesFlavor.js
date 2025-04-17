@@ -10,7 +10,6 @@ export const concentricCirclesFlavor = {
                 ['#2E236C', '#433D8B'],
                 ['#8E1616', '#AE445A'],
                 ['#626F47', '#A4B465'],
-
             ],
         }
     },
