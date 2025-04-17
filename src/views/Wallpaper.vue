@@ -178,6 +178,7 @@ import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
 import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 import { oneToThreeEmojiFlavor } from '@/js/puzzle_flavors/OneToThreeEmojiFlavor'
+import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
@@ -206,7 +207,7 @@ function drawRoundedRect(ctx, x, y, w, h, r) {
 }
 
 /** Flavor used here for demonstration. */
-const flavor = oneToThreeEmojiFlavor
+const flavor = concentricCirclesFlavor
 
 /** Reactive state for user settings. */
 const selectedDimensions   = ref('1920x1080')
