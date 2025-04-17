@@ -172,12 +172,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { OneToThreeEmojiFlavor } from '@/js/puzzle_flavors/OneToThreeEmojiFlavor'
 import { drawPuzzleGrid } from '@/js/drawer'
 import { generateCellsAndAnswers } from '@/js/generator'
 import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
 import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
+import { oneToThreeEmojiFlavor } from '@/js/puzzle_flavors/OneToThreeEmojiFlavor'
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
@@ -206,7 +206,7 @@ function drawRoundedRect(ctx, x, y, w, h, r) {
 }
 
 /** Flavor used here for demonstration. */
-const flavor = OneToThreeEmojiFlavor
+const flavor = oneToThreeEmojiFlavor
 
 /** Reactive state for user settings. */
 const selectedDimensions   = ref('1920x1080')
@@ -219,7 +219,7 @@ const answerCellSize       = ref(100)
 const answerGap            = ref(20)
 const answerCellRadiusRatio = ref(0.16)         // relative to cell size
 const borderColor          = ref('#ffffff')
-const borderAlpha          = ref(0.33)
+const borderAlpha          = ref(0.4)
 const borderRadiusRatio    = ref(0.04)          // relative to puzzle size
 const numWallpapers        = ref(10)            // bulk‑download count
 
@@ -296,7 +296,6 @@ function drawWallpaper() {
       flavor.drawCell,
       lastSeedUsed,
       'q',
-      borderColor.value.replace('#', '') // used for internal puzzle lines
   )
 
   /* Draw answers row */

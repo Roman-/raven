@@ -5,16 +5,17 @@ import {shapeFlavor} from "@/js/puzzle_flavors/shapeFlavor";
 import {colorWheelFlavor} from "@/js/puzzle_flavors/colorWheelFlavor";
 import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor";
 import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
-import {shapeUnionFlavor} from "@/js/puzzle_flavors/ShapeUnionFlavor";
+import {oneToThreeEmojiFlavor} from "@/js/puzzle_flavors/OneToThreeEmojiFlavor";
 
 export const allFlavors = [
-        multiShapeFlavor,
-        emojiFlavor,
-        squareGradientsFlavor,
-        shapeFlavor,
-        columnsOfCirclesFlavor,
-        colorWheelFlavor,
+    multiShapeFlavor,
+    emojiFlavor,
+    squareGradientsFlavor,
+    shapeFlavor,
+    columnsOfCirclesFlavor,
+    colorWheelFlavor,
     tiledLinesFlavor,
+    oneToThreeEmojiFlavor,
     // shapeUnionFlavor
 ]
 

@@ -1,7 +1,7 @@
 import {emojiCategories} from "@/js/draw/drawingCommon";
 import {randomElement} from "@/js/helpers";
 
-export const OneToThreeEmojiFlavor = {
+export const oneToThreeEmojiFlavor = {
     name: 'One to three emoji',
     description: 'One, two or three emoji in a row',
     isArtistic: false,
