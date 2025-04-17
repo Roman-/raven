@@ -38,7 +38,7 @@
 
         <!-- Puzzle size ratio -->
         <div>
-          <label class="block font-semibold mb-1">Puzzle Size Ratio</label>
+          <label class="block font-semibold mb-1">Puzzle Size Ratio: {{ puzzleSizeRatio }}</label>
           <input
               type="range"
               min="0.1"
@@ -48,12 +48,11 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ puzzleSizeRatio }}</p>
         </div>
 
         <!-- Puzzle margin ratio -->
         <div>
-          <label class="block font-semibold mb-1">Puzzle Margin Ratio</label>
+          <label class="block font-semibold mb-1">Puzzle Margin Ratio: {{ puzzleMarginRatio }}</label>
           <input
               type="range"
               min="0"
@@ -63,12 +62,11 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ puzzleMarginRatio }}</p>
         </div>
 
         <!-- Grid Y offset -->
         <div>
-          <label class="block font-semibold mb-1">Puzzle Y Offset px</label>
+          <label class="block font-semibold mb-1">Puzzle Y Offset {{ gridYOffset }} px</label>
           <input
               type="range"
               min="-300"
@@ -78,12 +76,11 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ gridYOffset }} px</p>
         </div>
 
         <!-- Answer Cell Size -->
         <div>
-          <label class="block font-semibold mb-1">Answer Cell Size px</label>
+          <label class="block font-semibold mb-1">Answer Cell Size {{ answerCellSize }} px</label>
           <input
               type="range"
               min="10"
@@ -93,12 +90,11 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ answerCellSize }} px</p>
         </div>
 
         <!-- Answer Cell Gap -->
         <div>
-          <label class="block font-semibold mb-1">Answer Cell Gap px</label>
+          <label class="block font-semibold mb-1">Answer Cell Gap {{ answerGap }} px</label>
           <input
               type="range"
               min="0"
@@ -108,12 +104,11 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ answerGap }} px</p>
         </div>
 
         <!-- Answer Cell Roundness -->
         <div>
-          <label class="block font-semibold mb-1">Answer Cell Roundness px</label>
+          <label class="block font-semibold mb-1">Answer Cell Roundness: {{ answerCellRadius }} px</label>
           <input
               type="range"
               min="0"
@@ -123,7 +118,6 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ answerCellRadius }} px</p>
         </div>
 
         <!-- Puzzle Border Color + Alpha -->
@@ -135,7 +129,7 @@
               v-model="borderColor"
               @input="drawWallpaper"
           />
-          <label class="block font-semibold mt-2">Border Alpha</label>
+          <label class="block font-semibold mt-2">Border Alpha: {{ borderAlpha }}</label>
           <input
               type="range"
               min="0"
@@ -145,12 +139,11 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ borderAlpha }}</p>
         </div>
 
         <!-- Puzzle Border Roundness -->
         <div>
-          <label class="block font-semibold mb-1">Puzzle Border Roundness px</label>
+          <label class="block font-semibold mb-1">Puzzle Border Roundness {{ borderRadius }} px</label>
           <input
               type="range"
               min="0"
@@ -160,7 +153,6 @@
               class="range"
               @input="drawWallpaper"
           />
-          <p class="text-sm">Value: {{ borderRadius }} px</p>
         </div>
       </div>
     </div>
@@ -210,11 +202,11 @@ const flavor = OneToThreeEmojiFlavor;
 const selectedDimensions  = ref("1920x1080");
 const wallpaperWidth      = ref(1920);
 const wallpaperHeight     = ref(1080);
-const puzzleSizeRatio     = ref(0.7);
+const puzzleSizeRatio     = ref(0.75);
 const puzzleMarginRatio   = ref(0.02);
 const gridYOffset         = ref(0);
 const answerCellSize      = ref(100);
-const answerGap           = ref(10);
+const answerGap           = ref(20);
 const answerCellRadius    = ref(0);
 const borderColor         = ref('#ffffff');
 const borderAlpha         = ref(0.33);
@@ -238,7 +230,8 @@ function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50);
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length;
   const grids = generateSetOfGridsMaximumDifficulty(numFeatures);
-  puzzleData.value = generateCellsAndAnswers(grids, flavor, 9);
+  const numAnswers = 9;
+  puzzleData.value = generateCellsAndAnswers(grids, flavor, numAnswers);
   drawWallpaper();
 }
 
@@ -328,7 +321,7 @@ function downloadPng() {
 }
 
 function downloadBulk() {
-  const numWallpapers = 10;
+  const numWallpapers = 30;
   const oldPuzzle = puzzleData.value;
   for (let i = 1; i <= numWallpapers; i++) {
     generatePuzzle();
