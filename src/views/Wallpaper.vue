@@ -11,7 +11,7 @@ import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlav
 /******************************************************************************
  Flavor choosen for the wallpaper
  ******************************************************************************/
-const flavor = concentricCirclesFlavor
+const flavor = rectFlavor
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
