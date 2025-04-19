@@ -4,7 +4,7 @@ export const concentricCirclesFlavor = {
     isArtistic: false,
     getFeaturesVariations: () => {
         return {
-            'numCircles': [2, 3, 5],
+            'numCircles': [1, 2, 3],
             'palette': [
                 ['#0F4C75', '#3282B8'],
                 ['#2E236C', '#433D8B'],

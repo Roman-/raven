@@ -1,3 +1,199 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { drawPuzzleGrid } from '@/js/drawer'
+import { generateCellsAndAnswers } from '@/js/generator'
+import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
+import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
+import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
+import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
+import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
+
+/******************************************************************************
+ Flavor choosen for the wallpaper
+ ******************************************************************************/
+const flavor = concentricCirclesFlavor
+
+/** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
+function hexToRgba(hex, alpha) {
+  const trimmed = hex.replace(/^#/, '')
+  const r = parseInt(trimmed.substring(0, 2), 16)
+  const g = parseInt(trimmed.substring(2, 4), 16)
+  const b = parseInt(trimmed.substring(4, 6), 16)
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(255,255,255,${alpha})`
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+/** Draw a rounded rectangle path for custom roundness. */
+function drawRoundedRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, Math.min(w, h) / 2)
+  ctx.beginPath()
+  ctx.moveTo(x + radius, y)
+  ctx.lineTo(x + w - radius, y)
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius)
+  ctx.lineTo(x + w, y + h - radius)
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h)
+  ctx.lineTo(x + radius, y + h)
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radius)
+  ctx.lineTo(x, y + radius)
+  ctx.quadraticCurveTo(x, y, x + radius, y)
+  ctx.closePath()
+}
+
+/** Reactive state for user settings. */
+const selectedDimensions   = ref('1920x1080')
+const wallpaperWidth       = ref(1920)
+const wallpaperHeight      = ref(1080)
+const puzzleSizeRatio      = ref(0.7)           // default changed
+const puzzleMarginRatio    = ref(0.06)          // default changed
+const gridYOffsetRatio     = ref(-0.045)
+const answerCellSize       = ref(100)
+const answerGap            = ref(20)
+const answerCellRadiusRatio = ref(0.16)         // relative to cell size
+const borderColor          = ref('#ffffff')
+const borderAlpha          = ref(0.4)
+const borderRadiusRatio    = ref(0.04)          // relative to puzzle size
+const numWallpapers        = ref(10)            // bulk‑download count
+
+/** Puzzle data and references. */
+const puzzleData  = ref(null)
+const canvasRef   = ref(null)
+let lastSeedUsed  = 999
+
+/** Update width/height from <select> and redraw. */
+function onDimensionsChanged() {
+  const [w, h] = selectedDimensions.value.split('x').map(Number)
+  wallpaperWidth.value  = w
+  wallpaperHeight.value = h
+  drawWallpaper()
+}
+
+/** Generate a new puzzle. */
+function generatePuzzle() {
+  lastSeedUsed += 17 + Math.floor(Math.random() * 50)
+  const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
+  const grids       = generateSetOfGridsMaximumDifficulty(numFeatures)
+  const numAnswers  = 9
+  puzzleData.value  = generateCellsAndAnswers(grids, flavor, numAnswers)
+  drawWallpaper()
+}
+
+/** Draw the entire wallpaper. */
+function drawWallpaper() {
+  const canvas = canvasRef.value
+  if (!canvas || !puzzleData.value) return
+
+  canvas.width  = wallpaperWidth.value
+  canvas.height = wallpaperHeight.value
+
+  const ctx = canvas.getContext('2d')
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  /* ---------- Background gradient ---------- */
+  const palettes = [
+    ['#1A1A1D', '#3B1C32', '#6A1E55'],
+    ['#09122C', '#872341', '#BE3144'],
+    ['#1A3636', '#40534C', '#677D6A'],
+    ['#1B262C', '#0F4C75', '#3282B8'],
+    ['#17153B', '#2E236C', '#433D8B']
+  ]
+  const chosenPalette = randomElement(palettes)
+  drawRandomLinearGradient(ctx, 0, 0, canvas.width, canvas.height, chosenPalette)
+
+  /* ---------- Puzzle layout ---------- */
+  const puzzleSize = canvas.height * puzzleSizeRatio.value
+  const margin     = puzzleSize * puzzleMarginRatio.value
+  const puzzleX    = (canvas.width - puzzleSize) / 2
+  const puzzleY    = ((canvas.height - puzzleSize) / 2) + (gridYOffsetRatio.value * canvas.height)
+
+  /* Rounded box behind puzzle */
+  ctx.fillStyle = hexToRgba(borderColor.value, borderAlpha.value)
+  drawRoundedRect(
+      ctx,
+      puzzleX - margin,
+      puzzleY - margin,
+      puzzleSize + margin * 2,
+      puzzleSize + margin * 2,
+      puzzleSize * borderRadiusRatio.value
+  )
+  ctx.fill()
+
+  /* Draw puzzle */
+  drawPuzzleGrid(
+      ctx,
+      puzzleX,
+      puzzleY,
+      puzzleSize,
+      puzzleData.value.cells,
+      flavor.drawCell,
+      lastSeedUsed,
+      'q',
+  )
+
+  /* Draw answers row */
+  drawAnswersRow(ctx, puzzleData.value.answers)
+}
+
+/** Draw the answers at the bottom with rounded corners. */
+function drawAnswersRow(ctx, answers) {
+  if (!answers || !answers.length) return
+
+  const totalWidth = answers.length * answerCellSize.value + (answers.length - 1) * answerGap.value
+  const startX     = (ctx.canvas.width - totalWidth) / 2
+  const y          = ctx.canvas.height - answerCellSize.value - 50
+
+  for (let i = 0; i < answers.length; i++) {
+    const cellX = startX + i * (answerCellSize.value + answerGap.value)
+
+    /* Rounded bounding box behind each answer */
+    ctx.save()
+    ctx.fillStyle = `rgba(255,255,255,${borderAlpha.value})`
+    drawRoundedRect(
+        ctx,
+        cellX,
+        y,
+        answerCellSize.value,
+        answerCellSize.value,
+        answerCellSize.value * answerCellRadiusRatio.value
+    )
+    ctx.fill()
+    ctx.restore()
+
+    /* Draw the actual cell shape on an off‑screen canvas */
+    const offscreen       = document.createElement('canvas')
+    offscreen.width       = answerCellSize.value
+    offscreen.height      = answerCellSize.value
+    const offctx          = offscreen.getContext('2d')
+    const rand            = seededRandom(lastSeedUsed + i)
+
+    flavor.drawCell(offctx, answers[i], answerCellSize.value, rand)
+    ctx.drawImage(offscreen, cellX, y)
+  }
+}
+
+/** Download current PNG. */
+function downloadPng() {
+  downloadCanvasAsPNG(canvasRef.value, 'wallpaper.png')
+}
+
+/** Download a bulk set of wallpapers. */
+function downloadBulk() {
+  const oldPuzzle      = puzzleData.value
+  const count          = Math.max(1, Math.min(100, Math.floor(numWallpapers.value || 1)))
+
+  for (let i = 1; i <= count; i++) {
+    generatePuzzle()
+    const filename = `wallpaper_${String(i).padStart(3, '0')}.png`
+    downloadCanvasAsPNG(canvasRef.value, filename)
+  }
+
+  puzzleData.value = oldPuzzle
+  drawWallpaper()
+}
+
+onMounted(() => {
+  generatePuzzle()
+})
+</script>
 <template>
   <div class="p-2">
     <!-- Main buttons row -->
@@ -169,207 +365,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import { drawPuzzleGrid } from '@/js/drawer'
-import { generateCellsAndAnswers } from '@/js/generator'
-import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
-import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
-import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
-import { oneToThreeEmojiFlavor } from '@/js/puzzle_flavors/OneToThreeEmojiFlavor'
-import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
-
-/** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
-function hexToRgba(hex, alpha) {
-  const trimmed = hex.replace(/^#/, '')
-  const r = parseInt(trimmed.substring(0, 2), 16)
-  const g = parseInt(trimmed.substring(2, 4), 16)
-  const b = parseInt(trimmed.substring(4, 6), 16)
-  if (isNaN(r) || isNaN(g) || isNaN(b)) return `rgba(255,255,255,${alpha})`
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-/** Draw a rounded rectangle path for custom roundness. */
-function drawRoundedRect(ctx, x, y, w, h, r) {
-  const radius = Math.min(r, Math.min(w, h) / 2)
-  ctx.beginPath()
-  ctx.moveTo(x + radius, y)
-  ctx.lineTo(x + w - radius, y)
-  ctx.quadraticCurveTo(x + w, y, x + w, y + radius)
-  ctx.lineTo(x + w, y + h - radius)
-  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h)
-  ctx.lineTo(x + radius, y + h)
-  ctx.quadraticCurveTo(x, y + h, x, y + h - radius)
-  ctx.lineTo(x, y + radius)
-  ctx.quadraticCurveTo(x, y, x + radius, y)
-  ctx.closePath()
-}
-
-/** Flavor used here for demonstration. */
-const flavor = concentricCirclesFlavor
-
-/** Reactive state for user settings. */
-const selectedDimensions   = ref('1920x1080')
-const wallpaperWidth       = ref(1920)
-const wallpaperHeight      = ref(1080)
-const puzzleSizeRatio      = ref(0.7)           // default changed
-const puzzleMarginRatio    = ref(0.06)          // default changed
-const gridYOffsetRatio     = ref(-0.045)
-const answerCellSize       = ref(100)
-const answerGap            = ref(20)
-const answerCellRadiusRatio = ref(0.16)         // relative to cell size
-const borderColor          = ref('#ffffff')
-const borderAlpha          = ref(0.4)
-const borderRadiusRatio    = ref(0.04)          // relative to puzzle size
-const numWallpapers        = ref(10)            // bulk‑download count
-
-/** Puzzle data and references. */
-const puzzleData  = ref(null)
-const canvasRef   = ref(null)
-let lastSeedUsed  = 999
-
-/** Update width/height from <select> and redraw. */
-function onDimensionsChanged() {
-  const [w, h] = selectedDimensions.value.split('x').map(Number)
-  wallpaperWidth.value  = w
-  wallpaperHeight.value = h
-  drawWallpaper()
-}
-
-/** Generate a new puzzle. */
-function generatePuzzle() {
-  lastSeedUsed += 17 + Math.floor(Math.random() * 50)
-  const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
-  const grids       = generateSetOfGridsMaximumDifficulty(numFeatures)
-  const numAnswers  = 9
-  puzzleData.value  = generateCellsAndAnswers(grids, flavor, numAnswers)
-  drawWallpaper()
-}
-
-/** Draw the entire wallpaper. */
-function drawWallpaper() {
-  const canvas = canvasRef.value
-  if (!canvas || !puzzleData.value) return
-
-  canvas.width  = wallpaperWidth.value
-  canvas.height = wallpaperHeight.value
-
-  const ctx = canvas.getContext('2d')
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-  /* ---------- Background gradient ---------- */
-  const palettes = [
-    ['#1A1A1D', '#3B1C32', '#6A1E55'],
-    ['#09122C', '#872341', '#BE3144'],
-    ['#1A3636', '#40534C', '#677D6A'],
-    ['#1B262C', '#0F4C75', '#3282B8'],
-    ['#17153B', '#2E236C', '#433D8B']
-  ]
-  const chosenPalette = randomElement(palettes)
-  drawRandomLinearGradient(ctx, 0, 0, canvas.width, canvas.height, chosenPalette)
-
-  /* ---------- Puzzle layout ---------- */
-  const puzzleSize = canvas.height * puzzleSizeRatio.value
-  const margin     = puzzleSize * puzzleMarginRatio.value
-  const puzzleX    = (canvas.width - puzzleSize) / 2
-  const puzzleY    = ((canvas.height - puzzleSize) / 2) + (gridYOffsetRatio.value * canvas.height)
-
-  /* Rounded box behind puzzle */
-  ctx.fillStyle = hexToRgba(borderColor.value, borderAlpha.value)
-  drawRoundedRect(
-      ctx,
-      puzzleX - margin,
-      puzzleY - margin,
-      puzzleSize + margin * 2,
-      puzzleSize + margin * 2,
-      puzzleSize * borderRadiusRatio.value
-  )
-  ctx.fill()
-
-  /* Draw puzzle */
-  drawPuzzleGrid(
-      ctx,
-      puzzleX,
-      puzzleY,
-      puzzleSize,
-      puzzleData.value.cells,
-      flavor.drawCell,
-      lastSeedUsed,
-      'q',
-  )
-
-  /* Draw answers row */
-  drawAnswersRow(ctx, puzzleData.value.answers)
-}
-
-/** Draw the answers at the bottom with rounded corners. */
-function drawAnswersRow(ctx, answers) {
-  if (!answers || !answers.length) return
-
-  const totalWidth = answers.length * answerCellSize.value + (answers.length - 1) * answerGap.value
-  const startX     = (ctx.canvas.width - totalWidth) / 2
-  const y          = ctx.canvas.height - answerCellSize.value - 50
-
-  for (let i = 0; i < answers.length; i++) {
-    const cellX = startX + i * (answerCellSize.value + answerGap.value)
-
-    /* Rounded bounding box behind each answer */
-    ctx.save()
-    ctx.fillStyle = `rgba(255,255,255,${borderAlpha.value})`
-    drawRoundedRect(
-        ctx,
-        cellX,
-        y,
-        answerCellSize.value,
-        answerCellSize.value,
-        answerCellSize.value * answerCellRadiusRatio.value
-    )
-    ctx.fill()
-    ctx.restore()
-
-    /* Draw the actual cell shape on an off‑screen canvas */
-    const offscreen       = document.createElement('canvas')
-    offscreen.width       = answerCellSize.value
-    offscreen.height      = answerCellSize.value
-    const offctx          = offscreen.getContext('2d')
-    const rand            = seededRandom(lastSeedUsed + i)
-
-    flavor.drawCell(offctx, answers[i], answerCellSize.value, rand)
-    ctx.drawImage(offscreen, cellX, y)
-  }
-}
-
-/** Download current PNG. */
-function downloadPng() {
-  downloadCanvasAsPNG(canvasRef.value, 'wallpaper.png')
-}
-
-/** Download a bulk set of wallpapers. */
-function downloadBulk() {
-  const oldPuzzle      = puzzleData.value
-  const count          = Math.max(1, Math.min(100, Math.floor(numWallpapers.value || 1)))
-
-  for (let i = 1; i <= count; i++) {
-    generatePuzzle()
-    const filename = `wallpaper_${String(i).padStart(3, '0')}.png`
-    downloadCanvasAsPNG(canvasRef.value, filename)
-  }
-
-  puzzleData.value = oldPuzzle
-  drawWallpaper()
-}
-
-/** Initial mount: generate one puzzle. */
-onMounted(() => {
-  generatePuzzle()
-})
-</script>
-
-<style scoped>
-canvas {
-  max-width: 100%;
-  height: auto;
-  background-color: #222;
-}
-</style>
