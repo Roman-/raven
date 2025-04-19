@@ -48,7 +48,7 @@ export const downloadCanvasAsPNG = (canvas, filename = "matrix.png") => {
     link.click()
 }
 
-function resetCanvasSettings(ctx) {
+export const resetCanvasSettings = ctx => {
     ctx.strokeStyle = '#000000';  // Default: black
     ctx.fillStyle = '#000000';    // Default: black
     ctx.lineWidth = 1;            // Default: 1px
@@ -65,6 +65,8 @@ function resetCanvasSettings(ctx) {
     ctx.textAlign = 'start';       // Default: 'start'
     ctx.textBaseline = 'alphabetic'; // Default: 'alphabetic'
     ctx.direction = 'ltr';         // Default: 'ltr'
+    ctx.setLineDash([]);    // Default: solid line
+    ctx.lineDashOffset = 0; // Default: 0px
 }
 
 export function seededRandom(seed) {

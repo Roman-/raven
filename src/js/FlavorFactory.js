@@ -7,6 +7,7 @@ import {columnsOfCirclesFlavor} from "@/js/puzzle_flavors/columnsOfCirclesFlavor
 import {tiledLinesFlavor} from "@/js/puzzle_flavors/tiledLinesFlavor";
 import {oneToThreeEmojiFlavor} from "@/js/puzzle_flavors/OneToThreeEmojiFlavor";
 import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
+import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
 
 export const allFlavors = [
     multiShapeFlavor,
@@ -18,6 +19,7 @@ export const allFlavors = [
     tiledLinesFlavor,
     oneToThreeEmojiFlavor,
     concentricCirclesFlavor,
+    rectFlavor
     // shapeUnionFlavor
 ]
 

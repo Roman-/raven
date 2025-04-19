@@ -2,10 +2,11 @@
 // drawCell - function that draws a single cell (offscreenCtx, cell, size, rand)
 // revealAnswer - boolean: if true, draw the real cell instead of question mark
 // answerStyle: 'q' for question mark, 'n' for normal, 'r' for revealed (outlined)
-import {seededRandom} from "@/js/helpers";
+import {seededRandom, resetCanvasSettings} from "@/js/helpers";
 import {store} from "@/store/store";
 
 export const drawPuzzleGrid = (ctx, startX, startY, puzzleSize, cells, drawCell, seedOfCellZero, answerStyle, strokeShade = "000000") => {
+    resetCanvasSettings(ctx);
     if (!cells || cells.length === 0 || !drawCell) {
         return;
     }

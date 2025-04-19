@@ -2,7 +2,7 @@
 import {onMounted, ref, watch, onBeforeUnmount, computed} from 'vue';
 import { store } from '@/store/store';
 import { drawPuzzleGrid } from '@/js/drawer';
-import {randomElement, seededRandom} from "@/js/helpers";
+import {randomElement, resetCanvasSettings, seededRandom} from "@/js/helpers";
 import 'animate.css';
 
 // Main puzzle dimension
@@ -59,6 +59,7 @@ const drawAllAnswers = () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    resetCanvasSettings(ctx);
     ctx.clearRect(0, 0, answerCanvasSize.value, answerCanvasSize.value);
 
     // Now draw the shape for this answer
