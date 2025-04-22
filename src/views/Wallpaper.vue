@@ -7,11 +7,12 @@ import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
 import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
+import {letterFontFlavor} from "@/js/puzzle_flavors/letterFontFlavor";
 
 /******************************************************************************
  Flavor choosen for the wallpaper
  ******************************************************************************/
-const flavor = rectFlavor
+const flavor = letterFontFlavor
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
