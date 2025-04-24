@@ -1,6 +1,7 @@
 # 🧩 Raven — Visual Pattern Recognition Game
+# https://bestsiteever.net/raven
 
-**Raven** is a puzzle game that challenges users to identify the correct pattern completion from multiple visual options. Inspired by IQ test pattern matrices, the game randomly generates puzzles using various visual "flavors" that encode configurable features.
+Pattern puzzle game that challenges you to identify the correct sequence completion from multiple visual options. Inspired by IQ test pattern matrices, the game randomly generates puzzles using various visual "flavors" that encode configurable features.
 
 ## 🧠 Features
 
