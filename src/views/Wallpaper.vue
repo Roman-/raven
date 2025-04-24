@@ -10,16 +10,12 @@ import {
 } from '@/js/grids'
 import {downloadCanvasAsPNG, randomElement, seededRandom, shuffle} from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
-import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
-import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
-import {letterFontFlavor} from "@/js/puzzle_flavors/letterFontFlavor";
-import {quadrilateralFlavor} from "@/js/puzzle_flavors/quadrilateralFlavor";
-import {twoCirclesFlavor} from "@/js/puzzle_flavors/twoCirclesFlavor";
+import {intersectingLinesFlavor} from "@/js/puzzle_flavors/intersectingLinesFlavor";
 
 /******************************************************************************
  Flavor choosen for the wallpaper
  ******************************************************************************/
-const flavor = twoCirclesFlavor
+const flavor = intersectingLinesFlavor
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {

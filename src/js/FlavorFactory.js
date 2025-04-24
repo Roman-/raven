@@ -9,6 +9,7 @@ import {oneToThreeEmojiFlavor} from "@/js/puzzle_flavors/OneToThreeEmojiFlavor";
 import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
 import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
 import {quadrilateralFlavor} from "@/js/puzzle_flavors/quadrilateralFlavor";
+import {twoCirclesFlavor} from "@/js/puzzle_flavors/twoCirclesFlavor";
 
 export const allFlavors = [
     multiShapeFlavor,
@@ -21,7 +22,8 @@ export const allFlavors = [
     oneToThreeEmojiFlavor,
     concentricCirclesFlavor,
     rectFlavor,
-    quadrilateralFlavor
+    quadrilateralFlavor,
+    twoCirclesFlavor,
 ]
 
 export const getRandomFlavor = (flavors, numFeatures) => {
