@@ -14,11 +14,12 @@ import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
 import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
 import {letterFontFlavor} from "@/js/puzzle_flavors/letterFontFlavor";
 import {quadrilateralFlavor} from "@/js/puzzle_flavors/quadrilateralFlavor";
+import {twoCirclesFlavor} from "@/js/puzzle_flavors/twoCirclesFlavor";
 
 /******************************************************************************
  Flavor choosen for the wallpaper
  ******************************************************************************/
-const flavor = quadrilateralFlavor
+const flavor = twoCirclesFlavor
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
@@ -78,6 +79,7 @@ function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50)
   // generate difficulty = 2
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
+  // let grids = shuffle([generatePermutedGrid(), generateAlignedGrid()]) // diff = 2
   let grids = [generatePermutedGrid(), generateAlignedGrid()] // diff = 2
   while (grids.length < numFeatures) {
     grids.push(generateConstantGrid()) // random constant from the rest of the feature to add variety
