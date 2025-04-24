@@ -20,11 +20,11 @@ export const twoCirclesFlavor = {
         const x1 = cx - d / 2;
         const x2 = cx + d / 2;
         const color1 = cell.color
-        const color2 = cell.color
+        const color2 = cell.color // TODO make it slightly different
 
         ctx.clearRect(0, 0, size, size);
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = cell.strokeColor
+        ctx.strokeStyle = cell.strokeColor // TODO make it slightly darker
 
         ctx.beginPath();
         ctx.arc(x1, cy, r, 0, Math.PI * 2);
