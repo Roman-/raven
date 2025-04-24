@@ -1,3 +1,4 @@
+import tinycolor from 'tinycolor2'
 export const twoCirclesFlavor = {
     name: 'TwoCircles',
     description: 'Two pastel-colored circles with varying relative distance and size',
@@ -7,7 +8,7 @@ export const twoCirclesFlavor = {
         color: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF'],
     }),
     drawCell: (ctx, cell, size, rand) => {
-        const lineWidth = 0.03 * size;
+        const lineWidth = 0.02 * size;
         const r = 0.18 * size;
         const cx = size / 2;
         const cy = size / 2;
@@ -19,12 +20,13 @@ export const twoCirclesFlavor = {
         }
         const x1 = cx - d / 2;
         const x2 = cx + d / 2;
-        const color1 = cell.color
-        const color2 = cell.color // TODO make it slightly different
+        let baseColor = tinycolor(cell.color);
+        const color1 = baseColor.brighten(0.2).toString();
+        const color2 = baseColor.lighten(10).toString();
 
         ctx.clearRect(0, 0, size, size);
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = cell.strokeColor // TODO make it slightly darker
+        ctx.strokeStyle = baseColor.darken(30).toString();
 
         ctx.beginPath();
         ctx.arc(x1, cy, r, 0, Math.PI * 2);
