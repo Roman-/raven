@@ -5,7 +5,8 @@ export const twoCirclesFlavor = {
     isArtistic: false,
     getFeaturesVariations: () => ({
         distanceMode: ['intersect', 'touch', 'apart'],
-        color: ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF'],
+        color: ['#D33F49', '#D7C0D0', '#77BA99'],
+        colorDistributionRule: ['same', 'lighter', 'darker'],
     }),
     drawCell: (ctx, cell, size, rand) => {
         const lineWidth = 0.02 * size;
@@ -22,11 +23,17 @@ export const twoCirclesFlavor = {
         const x2 = cx + d / 2;
         let baseColor = tinycolor(cell.color);
         const color1 = baseColor.brighten(0.2).toString();
-        const color2 = baseColor.lighten(10).toString();
+        // let color2 = baseColor.lighten(10).toString();
+        let color2;
+        switch (cell.colorDistributionRule) {
+            case 'lighter':  color2 = baseColor.lighten(30).toString(); break;
+            case 'darker':   color2 = baseColor.darken(30).toString(); break;
+            default:         color2 = baseColor.toString(); break;
+        }
 
         ctx.clearRect(0, 0, size, size);
         ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = baseColor.darken(30).toString();
+        ctx.strokeStyle = baseColor.darken(40).toString();
 
         ctx.beginPath();
         ctx.arc(x1, cy, r, 0, Math.PI * 2);

@@ -38,6 +38,19 @@ function selectOnly(flavor) {
 }
 
 const allFlavorsList = computed(() => allFlavors);
+
+// Return number of features for a given flavor
+function featureCount(flavor) {
+  return Object.keys(flavor.getFeaturesVariations()).length;
+}
+// Determine badge color class based on feature count
+function badgeClass(flavor) {
+  const count = featureCount(flavor);
+  if (count === 1) return 'badge badge-success';
+  if (count === 2) return 'badge badge-warning';
+  if (count === 3) return 'badge bg-orange-500 text-white';
+  return 'badge badge-error';
+}
 </script>
 
 <template>
@@ -74,6 +87,7 @@ const allFlavorsList = computed(() => allFlavors);
           <span>
             {{ flavor.name }}
           </span>
+          <span :class="badgeClass(flavor)">{{ featureCount(flavor) }}</span>
         </label>
         <button
             class="btn btn-xs btn-link"
