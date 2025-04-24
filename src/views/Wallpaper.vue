@@ -8,11 +8,12 @@ import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
 import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
 import {letterFontFlavor} from "@/js/puzzle_flavors/letterFontFlavor";
+import {quadrilateralFlavor} from "@/js/puzzle_flavors/quadrilateralFlavor";
 
 /******************************************************************************
  Flavor choosen for the wallpaper
  ******************************************************************************/
-const flavor = concentricCirclesFlavor
+const flavor = quadrilateralFlavor
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
@@ -72,6 +73,7 @@ function onDimensionsChanged() {
 function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50)
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
+  // const grids       = generateSetOfGridsMaximumDifficulty(numFeatures)
   const grids       = generateSetOfGridsMaximumDifficulty(numFeatures)
   const numAnswers  = 9
   puzzleData.value  = generateCellsAndAnswers(grids, flavor, numAnswers)
