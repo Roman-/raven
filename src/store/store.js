@@ -57,7 +57,8 @@ export const store = createStore({
             state.cellsAndAnswers = generateCellsAndAnswers(
                 grids,
                 state.flavor,
-                state.numAnswers
+                state.numAnswers,
+                false // don't shuffle
             );
         },
         selectAnswer (state, index) {

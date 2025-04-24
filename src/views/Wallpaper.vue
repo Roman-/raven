@@ -2,8 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { drawPuzzleGrid } from '@/js/drawer'
 import { generateCellsAndAnswers } from '@/js/generator'
-import { generateSetOfGridsMaximumDifficulty } from '@/js/grids'
-import { downloadCanvasAsPNG, randomElement, seededRandom } from '@/js/helpers'
+import {
+  generateAlignedGrid,
+  generateConstantGrid,
+  generatePermutedGrid,
+  generateSetOfGridsMaximumDifficulty
+} from '@/js/grids'
+import {downloadCanvasAsPNG, randomElement, seededRandom, shuffle} from '@/js/helpers'
 import { drawRandomLinearGradient } from '@/js/draw/drawingCommon'
 import {rectFlavor} from "@/js/puzzle_flavors/rectFlavor";
 import {concentricCirclesFlavor} from "@/js/puzzle_flavors/concentricCirclesFlavor";
@@ -72,9 +77,12 @@ function onDimensionsChanged() {
 /** Generate a new puzzle. */
 function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50)
+  // generate difficulty = 2
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
-  // const grids       = generateSetOfGridsMaximumDifficulty(numFeatures)
-  const grids       = generateSetOfGridsMaximumDifficulty(numFeatures)
+  let grids = shuffle([generatePermutedGrid(), generateAlignedGrid()]) // difficuslty = 2
+  while (grids.length < numFeatures) {
+    grids.push(generateConstantGrid()) // random constant from the rest of the feature to add variety
+  }
   const numAnswers  = 9
   puzzleData.value  = generateCellsAndAnswers(grids, flavor, numAnswers)
   drawWallpaper()

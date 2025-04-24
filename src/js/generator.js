@@ -1,7 +1,7 @@
 import {randomElement, shuffle, threeRandomElements} from '@/js/helpers'
 
 // returns {puzzle (3x3 array of cell objects), answers (array of cell objects)}
-export const generateCellsAndAnswers = (grids, flavor, numAnswers) => {
+export const generateCellsAndAnswers = (grids, flavor, numAnswers, shuffleGrids = true) => {
     const featuresVariations = flavor.getFeaturesVariations()
     const featureNames = Object.keys(featuresVariations)
     if (grids.length !== featureNames.length) {
@@ -15,7 +15,9 @@ export const generateCellsAndAnswers = (grids, flavor, numAnswers) => {
         chosenVariationsForFeature[feature] = threeRandomElements(featuresVariations[feature])
     }
 
-    grids = shuffle(grids)
+    if (shuffleGrids) {
+        grids = shuffle(grids)
+    }
 
     // Build the puzzle as a 3x3 array of cell objects
     const cells = []
