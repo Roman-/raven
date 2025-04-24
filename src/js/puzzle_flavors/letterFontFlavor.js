@@ -4,25 +4,27 @@ export const letterFontFlavor = {
     isArtistic: false,
     getFeaturesVariations: () => ({
         letter: ['L', 'i', 'n'],
-        font: [
-            "italic 'Times New Roman', serif",
-            "bold 'Courier New', monospace",
-            "lighter Arial, sans-serif"
+        fontBase: [
+            "italic Npx 'Times New Roman', serif",
+            "bold Npx 'Courier New', monospace",
+            "lighter Npx Arial, sans-serif"
         ],
     }),
     drawCell: (ctx, cell, size, rand) => {
-        // dark random color
+        const strokeWidth = size * 0.007;
+        const fontSize = Math.floor(size * 0.7);
+
+        ctx.clearRect(0, 0, size, size);
+
         const hue        = Math.floor(rand() * 360);
         const saturation = 60 + rand() * 10;
         const lightness  = 20 + rand() * 5;
         const fillColor  = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
-        // apply text style from cell.font
-        const fontSize = Math.floor(size * 0.6);
-        ctx.font         = `${fontSize}px ${cell.font}`;
+        ctx.font = cell.fontBase.replace('Npx', `${fontSize}px`);
         ctx.textAlign    = 'center';
         ctx.textBaseline = 'middle';
-        ctx.lineWidth    = '1';
+        ctx.lineWidth    = strokeWidth;
         ctx.strokeStyle  = '#000';
         ctx.fillStyle    = fillColor;
 

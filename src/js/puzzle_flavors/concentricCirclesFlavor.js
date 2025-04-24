@@ -6,7 +6,7 @@ export const concentricCirclesFlavor = {
         return {
             'numCircles': [1, 2, 3],
             'palette': [
-                ['#FF8225', '#173B45'],
+                ['#FF8225', '#AF5205'],
                 ['#0F4C75', '#3282B8'],
                 ['#FEBA17', '#74512D'],
                 ['#8E1616', '#AE445A'],

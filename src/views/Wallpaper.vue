@@ -12,7 +12,7 @@ import {letterFontFlavor} from "@/js/puzzle_flavors/letterFontFlavor";
 /******************************************************************************
  Flavor choosen for the wallpaper
  ******************************************************************************/
-const flavor = letterFontFlavor
+const flavor = concentricCirclesFlavor
 
 /** Simple helper to convert #RRGGBB + alpha -> rgba(...) */
 function hexToRgba(hex, alpha) {
