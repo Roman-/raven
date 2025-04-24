@@ -75,8 +75,8 @@ function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50)
   // generate difficulty = 2
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
-  // let grids = shuffle([generatePermutedGrid(), generateAlignedGrid()]) // diff = 2
-  let grids = [generatePermutedGrid(), generateAlignedGrid()] // diff = 2
+  let grids = [generatePermutedGrid(), generateAlignedGrid()] // difficulty = 2
+  // let grids = [generatePermutedGrid(1), generateAlignedGrid(0)] // for harder puzzles
   while (grids.length < numFeatures) {
     grids.push(generateConstantGrid()) // random constant from the rest of the feature to add variety
   }
