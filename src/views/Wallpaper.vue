@@ -74,17 +74,16 @@ function onDimensionsChanged() {
   drawWallpaper()
 }
 
-/** Generate a new puzzle. */
 function generatePuzzle() {
   lastSeedUsed += 17 + Math.floor(Math.random() * 50)
   // generate difficulty = 2
   const numFeatures = Object.keys(flavor.getFeaturesVariations()).length
-  let grids = shuffle([generatePermutedGrid(), generateAlignedGrid()]) // difficuslty = 2
+  let grids = [generatePermutedGrid(), generateAlignedGrid()] // diff = 2
   while (grids.length < numFeatures) {
     grids.push(generateConstantGrid()) // random constant from the rest of the feature to add variety
   }
   const numAnswers  = 9
-  puzzleData.value  = generateCellsAndAnswers(grids, flavor, numAnswers)
+  puzzleData.value  = generateCellsAndAnswers(grids, flavor, numAnswers, false)
   drawWallpaper()
 }
 

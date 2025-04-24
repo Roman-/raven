@@ -6,9 +6,11 @@ export const quadrilateralFlavor = {
         shape: ['t', 's', 'b'],                // top-trapeze, square, bottom-trapeze
         direction: ['lr', 'tb', 'radial'],     // left→right, top→bottom, radial
         colors: [
-            ['#00FF00', '#FF0000'],
-            ['#FF00FF', '#00FFFF'],
-            ['#FFFF00', '#00FF00'],
+            ['#FF0055', '#00FFD5'], // hot pink & bright aqua
+            ['#FF9900', '#0033FF'], // orange & vivid blue
+            ['#00FF66', '#FF00FF'], // neon green & magenta
+            ['#FFFF00', '#9900FF'], // bright yellow & purple
+            ['#FF4444', '#00AAFF']  // coral red & sky blue
         ]
     }),
     drawCell: (ctx, cell, size, rand) => {
@@ -19,7 +21,7 @@ export const quadrilateralFlavor = {
 
         ctx.clearRect(0, 0, size, size);
         ctx.lineWidth   = lw;
-        ctx.strokeStyle = '#0000AA';
+        ctx.strokeStyle = cell.colors[1]
 
         // Compute the four corners
         let pts;
@@ -58,8 +60,8 @@ export const quadrilateralFlavor = {
             grad = ctx.createLinearGradient(size/2, margin, size/2, size - margin);
         } else {
             grad = ctx.createRadialGradient(
-                size/2, size/2, margin / 4,
-                size/2, size/2, size - margin / 2
+                size/2, size/2, 0,
+                size/2, size/2, size - margin*4
             );
         }
         grad.addColorStop(0, c1);
